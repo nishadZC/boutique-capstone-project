@@ -17,11 +17,23 @@ type CartAction =
   | { type: 'UPDATE_QUANTITY'; payload: { id: string; quantity: number } }
   | { type: 'CLEAR_CART' };
 
-const initialState: CartState = {
-  items: [],
-  total: 0,
-  itemCount: 0,
+const loadInitialState = (): CartState => {
+  try {
+    const savedCart = localStorage.getItem('boutique_cart');
+    if (savedCart) {
+      return JSON.parse(savedCart);
+    }
+  } catch (error) {
+    console.error('Failed to parse cart from local storage', error);
+  }
+  return {
+    items: [],
+    total: 0,
+    itemCount: 0,
+  };
 };
+
+const initialState: CartState = loadInitialState();
 
 const cartReducer = (state: CartState, action: CartAction): CartState => {
   switch (action.type) {
@@ -114,6 +126,10 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, initialState);
+
+  React.useEffect(() => {
+    localStorage.setItem('boutique_cart', JSON.stringify(state));
+  }, [state]);
 
   const addItem = (product: Product) => {
     dispatch({ type: 'ADD_ITEM', payload: product });

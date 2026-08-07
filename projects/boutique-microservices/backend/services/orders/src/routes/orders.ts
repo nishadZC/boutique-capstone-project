@@ -1,15 +1,29 @@
 import express from 'express';
 import axios from 'axios';
+import jwt from 'jsonwebtoken';
 import { query } from '../database/connection';
 import { Order, CreateOrderRequest, Address, ServiceResponse } from '../types';
 
 const router = express.Router();
 const PRODUCTS_SERVICE_URL = process.env.PRODUCTS_SERVICE_URL || 'http://localhost:3003';
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
 router.post('/', async (req, res) => {
   try {
-    // Demo mode - use a fixed user ID or get from request
-    const { items, shippingAddress, userId = 'demo-user-id' } = req.body as CreateOrderRequest & { userId?: string };
+    let extractedUserId = 'demo-user-id';
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    
+    if (token) {
+      try {
+        const decoded = jwt.verify(token, JWT_SECRET) as any;
+        if (decoded.userId) extractedUserId = decoded.userId;
+      } catch (e) {
+        console.error('Failed to verify token in orders post', e);
+      }
+    }
+    
+    // Use decoded userId, or fallback to request body / demo
+    const { items, shippingAddress, userId = extractedUserId } = req.body as CreateOrderRequest & { userId?: string };
 
     let totalAmount = 0;
     const orderItems: any[] = [];
@@ -75,8 +89,19 @@ router.post('/', async (req, res) => {
 
 router.get('/my-orders', async (req, res) => {
   try {
-    // Demo mode - use a fixed user ID or get from query
-    const userId = req.query.userId as string || 'demo-user-id';
+    let extractedUserId = 'demo-user-id';
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    
+    if (token) {
+      try {
+        const decoded = jwt.verify(token, JWT_SECRET) as any;
+        if (decoded.userId) extractedUserId = decoded.userId;
+      } catch (e) {
+        console.error('Failed to verify token in orders get', e);
+      }
+    }
+    
+    const userId = req.query.userId as string || extractedUserId;
 
     const result = await query(`
       SELECT o.*,
