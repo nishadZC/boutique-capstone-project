@@ -28,22 +28,7 @@ import {
 import { useCart } from '../../contexts/CartContext';
 import { useNavigate } from 'react-router-dom';
 
-const RazorpayButton = () => {
-  const formRef = React.useRef<HTMLFormElement>(null);
-
-  React.useEffect(() => {
-    if (formRef.current && formRef.current.children.length === 0) {
-      const script = document.createElement('script');
-      script.src = 'https://checkout.razorpay.com/v1/payment-button.js';
-      script.setAttribute('data-payment_button_id', 'pl_TMmaVAKy8snNVt');
-      script.async = true;
-      formRef.current.appendChild(script);
-    }
-  }, []);
-
-  return <form ref={formRef}></form>;
-};
-
+import { orderService } from '../../services/orderService';
 const Cart: React.FC = () => {
   const { items, total, removeItem, updateQuantity, clearCart } = useCart();
   const navigate = useNavigate();
@@ -64,6 +49,22 @@ const Cart: React.FC = () => {
     removeItem(productId);
     setRemovedItemName(productName);
     setSnackbarOpen(true);
+  };
+
+  const handleCheckout = async () => {
+    try {
+      const orderData = {
+        items: items.map(item => ({ productId: item.id, quantity: item.quantity })),
+        shippingAddress: { address: 'Demo Address, 123 Luxury St, Fashion City' }
+      };
+      await orderService.createOrder(orderData);
+      clearCart();
+      navigate('/orders');
+    } catch (error) {
+      console.error('Failed to create order:', error);
+      setRemovedItemName('Failed to process checkout');
+      setSnackbarOpen(true);
+    }
   };
 
   if (items.length === 0) {
@@ -104,7 +105,7 @@ const Cart: React.FC = () => {
         <Typography variant="h6" color="text.secondary" paragraph>
           {items.length} {items.length === 1 ? 'Item' : 'Items'} in your cart
         </Typography>
-        
+
         <Grid container spacing={4}>
           <Grid size={{ xs: 12, md: 8 }}>
             <Paper elevation={2} sx={{ p: 3 }}>
@@ -125,7 +126,7 @@ const Cart: React.FC = () => {
                           alt={item.name}
                         />
                       </Grid>
-                      
+
                       <Grid size={{ xs: 12, sm: 5 }}>
                         <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
                           {item.name}
@@ -137,7 +138,7 @@ const Cart: React.FC = () => {
                           ${typeof item.price === 'string' ? parseFloat(item.price).toFixed(2) : item.price.toFixed(2)} each
                         </Typography>
                       </Grid>
-                      
+
                       <Grid size={{ xs: 12, sm: 3 }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                           <IconButton
@@ -154,9 +155,9 @@ const Cart: React.FC = () => {
                           >
                             <RemoveIcon />
                           </IconButton>
-                          <Typography 
-                            sx={{ 
-                              minWidth: '3rem', 
+                          <Typography
+                            sx={{
+                              minWidth: '3rem',
                               textAlign: 'center',
                               fontWeight: 600,
                               fontSize: '1.1rem'
@@ -185,7 +186,7 @@ const Cart: React.FC = () => {
                           </Typography>
                         )}
                       </Grid>
-                      
+
                       <Grid size={{ xs: 12, sm: 2 }}>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                           <Typography variant="h6" sx={{ fontWeight: 700 }}>
@@ -210,7 +211,7 @@ const Cart: React.FC = () => {
                 </Box>
               ))}
             </Paper>
-            
+
             <Box sx={{ mt: 3, display: 'flex', gap: 2, justifyContent: 'space-between' }}>
               <Button
                 variant="outlined"
@@ -229,19 +230,19 @@ const Cart: React.FC = () => {
               </Button>
             </Box>
           </Grid>
-          
+
           <Grid size={{ xs: 12, md: 4 }}>
             <Paper elevation={2} sx={{ p: 3, position: 'sticky', top: 24 }}>
               <Typography variant="h5" gutterBottom sx={{ fontWeight: 600 }}>
                 Order Summary
               </Typography>
-              
+
               <Box sx={{ mb: 3 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
                   <Typography variant="body1">Subtotal:</Typography>
                   <Typography variant="body1">${subtotal.toFixed(2)}</Typography>
                 </Box>
-                
+
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <ShippingIcon fontSize="small" />
@@ -251,20 +252,20 @@ const Cart: React.FC = () => {
                     {shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`}
                   </Typography>
                 </Box>
-                
+
                 {shipping > 0 && (
                   <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 2 }}>
                     Add ${(500 - subtotal).toFixed(2)} more for free shipping
                   </Typography>
                 )}
-                
+
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
                   <Typography variant="body1">Tax:</Typography>
                   <Typography variant="body1">${tax.toFixed(2)}</Typography>
                 </Box>
-                
+
                 <Divider sx={{ my: 2 }} />
-                
+
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Typography variant="h6" sx={{ fontWeight: 700 }}>
                     Total:
@@ -274,11 +275,30 @@ const Cart: React.FC = () => {
                   </Typography>
                 </Box>
               </Box>
-              
+
               <Box sx={{ mb: 2, display: 'flex', justifyContent: 'center' }}>
-                <RazorpayButton />
+                <Button
+                  variant="contained"
+                  fullWidth
+                  size="large"
+                  onClick={handleCheckout}
+                  sx={{
+                    py: 1.5,
+                    backgroundColor: '#000000',
+                    color: '#ffffff',
+                    fontWeight: 'bold',
+                    fontSize: '1.1rem',
+                    border: '2px solid #000000',
+                    '&:hover': {
+                      backgroundColor: '#ffffff',
+                      color: '#000000',
+                    }
+                  }}
+                >
+                  Proceed to Checkout
+                </Button>
               </Box>
-              
+
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, justifyContent: 'center', mb: 2 }}>
                 <SecurityIcon fontSize="small" color="action" />
                 <Typography variant="caption" color="text.secondary">
@@ -289,7 +309,7 @@ const Cart: React.FC = () => {
           </Grid>
         </Grid>
       </Box>
-      
+
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={3000}
