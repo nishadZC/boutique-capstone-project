@@ -28,16 +28,27 @@ import {
 import { useCart } from '../../contexts/CartContext';
 import { useNavigate } from 'react-router-dom';
 
+const RazorpayButton = () => {
+  const formRef = React.useRef<HTMLFormElement>(null);
+
+  React.useEffect(() => {
+    if (formRef.current && formRef.current.children.length === 0) {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/payment-button.js';
+      script.setAttribute('data-payment_button_id', 'pl_TMmaVAKy8snNVt');
+      script.async = true;
+      formRef.current.appendChild(script);
+    }
+  }, []);
+
+  return <form ref={formRef}></form>;
+};
+
 const Cart: React.FC = () => {
   const { items, total, removeItem, updateQuantity, clearCart } = useCart();
   const navigate = useNavigate();
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [removedItemName, setRemovedItemName] = useState('');
-
-  const handleCheckout = () => {
-    // In a real app, this would navigate to checkout
-    navigate('/checkout');
-  };
 
   const handleQuantityChange = (productId: string, delta: number) => {
     const item = items.find(item => item.id === productId);
@@ -264,16 +275,9 @@ const Cart: React.FC = () => {
                 </Box>
               </Box>
               
-              <Button
-                variant="contained"
-                color="secondary"
-                size="large"
-                onClick={handleCheckout}
-                fullWidth
-                sx={{ mb: 2, py: 1.5 }}
-              >
-                Proceed to Checkout
-              </Button>
+              <Box sx={{ mb: 2, display: 'flex', justifyContent: 'center' }}>
+                <RazorpayButton />
+              </Box>
               
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, justifyContent: 'center', mb: 2 }}>
                 <SecurityIcon fontSize="small" color="action" />

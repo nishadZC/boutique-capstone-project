@@ -319,10 +319,10 @@ const ProductDetail: React.FC = () => {
                     sx={{
                       flexGrow: 1,
                       py: 1.5,
-                      backgroundColor: '#d4af37',
+                      background: '#d4af37',
                       color: '#1a1a1a',
                       '&:hover': {
-                        backgroundColor: '#b8941f',
+                        background: '#b8941f',
                       },
                     }}
                   >
