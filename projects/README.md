@@ -83,12 +83,17 @@ Before deploying to the cloud, you can run the entire application locally using 
 
 From the `projects/boutique-microservices/` directory:
 
+1. Build the React frontend. The Docker container mounts the local `build` directory, so it must be compiled first:
 ```bash
 cd projects/boutique-microservices
-docker-compose -f docker-compose.yml up -d
+npm run build:frontend
 ```
 
-This builds all service images and starts containers for every service plus PostgreSQL, Prometheus, and Grafana.
+2. Start the Docker containers:
+```bash
+docker-compose -f docker-compose.yml up --build -d
+```
+This builds all backend service images and starts containers for every service plus PostgreSQL, Prometheus, and Grafana.
 
 ### Verify everything is running
 
@@ -107,6 +112,13 @@ You should see containers for: `frontend`, `gateway`, `auth`, `product-service`,
 | Grafana | http://localhost:3007 (admin / admin) |
 | Prometheus | http://localhost:9090 |
 
+### Stop Docker services
+
+```bash
+cd projects/boutique-microservices
+docker-compose -f docker-compose.yml down
+```
+
 ### Run without Docker (Node.js)
 
 When running locally without Docker, you must set up your PostgreSQL databases manually.
@@ -114,12 +126,10 @@ When running locally without Docker, you must set up your PostgreSQL databases m
 1. Ensure PostgreSQL is installed locally and running on port 5432.
 2. Ensure you have a PostgreSQL user named `postgres` with the password `root`.
 3. Inside `projects/boutique-microservices/backend/services/`, configure the `.env` files for the services to use `DB_HOST=localhost`, `DB_USER=postgres`, and `DB_PASSWORD=root`.
-4. Initialize the databases and schemas by running the setup scripts:
+4. Initialize the databases and schemas by running the setup script:
 ```bash
 cd projects/boutique-microservices/database/init
 node run-schema.js
-node fix-orders-db.js
-node add-profile-cols.js
 ```
 5. Install dependencies and start the application:
 ```bash
@@ -134,12 +144,7 @@ Or start them individually:
 npm run dev:backend   # all backend services
 npm run dev:frontend  # React frontend only
 ```
-
-### Stop all services
-
-```bash
-docker-compose -f docker-compose.yml down
-```
+(To stop local services, simply press `Ctrl+C` in your terminal).
 
 ---
 
