@@ -64,6 +64,31 @@ const Orders: React.FC = () => {
     }
   }, [user]);
 
+  const handleDownloadInvoice = (order: Order) => {
+    const invoiceContent = `
+INVOICE
+Order ID: ${order.id}
+Date: ${new Date(order.createdAt).toLocaleString()}
+Status: ${order.status}
+
+Items:
+${order.items.map(item => `- ${item.product.name} (Qty: ${item.quantity}) - $${typeof item.price === 'string' ? parseFloat(item.price).toFixed(2) : item.price.toFixed(2)}`).join('\n')}
+
+Total Amount: $${typeof order.totalAmount === 'string' ? parseFloat(order.totalAmount).toFixed(2) : order.totalAmount.toFixed(2)}
+Shipping Address: ${(order.shippingAddress as any)?.address || (typeof order.shippingAddress === 'string' ? order.shippingAddress : 'N/A')}
+    `.trim();
+
+    const blob = new Blob([invoiceContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `invoice-${order.id.slice(-8)}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'delivered':
@@ -248,6 +273,7 @@ const Orders: React.FC = () => {
                           size="small"
                           startIcon={<DownloadIcon />}
                           variant="outlined"
+                          onClick={() => handleDownloadInvoice(order)}
                         >
                           Invoice
                         </Button>

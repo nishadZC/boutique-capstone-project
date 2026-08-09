@@ -31,6 +31,8 @@ export interface User {
   firstName: string;
   lastName: string;
   role: 'customer' | 'admin';
+  phone?: string;
+  address?: string;
   createdAt: string;
   updatedAt: string;
 }

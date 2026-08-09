@@ -30,9 +30,53 @@ import {
   ExitToApp as LogoutIcon,
 } from '@mui/icons-material';
 import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import TextField from '@mui/material/TextField';
 
 const Profile: React.FC = () => {
-  const { user } = useAuth();
+  const { user, logout, updateProfile } = useAuth();
+  const navigate = useNavigate();
+  const [editOpen, setEditOpen] = React.useState(false);
+  const [editData, setEditData] = React.useState({
+    firstName: '',
+    lastName: '',
+    phone: '',
+    address: ''
+  });
+  const [updating, setUpdating] = React.useState(false);
+
+  React.useEffect(() => {
+    if (user) {
+      setEditData({
+        firstName: user.firstName || '',
+        lastName: user.lastName || '',
+        phone: user.phone || '',
+        address: user.address || ''
+      });
+    }
+  }, [user]);
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login');
+  };
+
+  const handleSaveProfile = async () => {
+    try {
+      setUpdating(true);
+      await updateProfile(editData);
+      setEditOpen(false);
+    } catch (err) {
+      console.error(err);
+      alert('Failed to update profile');
+    } finally {
+      setUpdating(false);
+    }
+  };
 
   if (!user) {
     return (
@@ -57,8 +101,6 @@ const Profile: React.FC = () => {
   ];
 
   const stats = [
-    { label: 'Total Orders', value: '12' },
-    { label: 'Wishlist Items', value: '8' },
     { label: 'Member Since', value: new Date(user.createdAt || Date.now()).toLocaleDateString() },
   ];
 
@@ -104,6 +146,7 @@ const Profile: React.FC = () => {
                 startIcon={<EditIcon />}
                 fullWidth
                 sx={{ mb: 2 }}
+                onClick={() => setEditOpen(true)}
               >
                 Edit Profile
               </Button>
@@ -112,6 +155,7 @@ const Profile: React.FC = () => {
                 color="error"
                 startIcon={<LogoutIcon />}
                 fullWidth
+                onClick={handleLogout}
               >
                 Logout
               </Button>
@@ -172,7 +216,7 @@ const Profile: React.FC = () => {
                       </ListItemIcon>
                       <ListItemText
                         primary="Phone Number"
-                        secondary="Not provided"
+                        secondary={user.phone || "Not provided"}
                       />
                     </ListItem>
                     <ListItem>
@@ -181,7 +225,7 @@ const Profile: React.FC = () => {
                       </ListItemIcon>
                       <ListItemText
                         primary="Address"
-                        secondary="Not provided"
+                        secondary={user.address || "Not provided"}
                       />
                     </ListItem>
                   </List>
@@ -227,6 +271,57 @@ const Profile: React.FC = () => {
           </Grid>
         </Grid>
       </Box>
+
+      {/* Edit Profile Dialog */}
+      <Dialog open={editOpen} onClose={() => setEditOpen(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>Edit Profile</DialogTitle>
+        <DialogContent>
+          <Box sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Grid container spacing={2}>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <TextField
+                  label="First Name"
+                  fullWidth
+                  value={editData.firstName}
+                  onChange={(e) => setEditData({ ...editData, firstName: e.target.value })}
+                />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <TextField
+                  label="Last Name"
+                  fullWidth
+                  value={editData.lastName}
+                  onChange={(e) => setEditData({ ...editData, lastName: e.target.value })}
+                />
+              </Grid>
+            </Grid>
+            <TextField
+              label="Phone Number"
+              fullWidth
+              value={editData.phone}
+              onChange={(e) => setEditData({ ...editData, phone: e.target.value })}
+            />
+            <TextField
+              label="Address"
+              fullWidth
+              multiline
+              rows={3}
+              value={editData.address}
+              onChange={(e) => setEditData({ ...editData, address: e.target.value })}
+            />
+          </Box>
+        </DialogContent>
+        <DialogActions sx={{ p: 2, pt: 0 }}>
+          <Button onClick={() => setEditOpen(false)}>Cancel</Button>
+          <Button 
+            variant="contained" 
+            onClick={handleSaveProfile}
+            disabled={updating}
+          >
+            {updating ? 'Saving...' : 'Save Changes'}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };

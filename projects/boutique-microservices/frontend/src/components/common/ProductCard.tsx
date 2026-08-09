@@ -88,6 +88,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         display: 'flex', 
         height: 200,
         transition: 'all 0.3s ease-in-out',
+        cursor: 'pointer',
         '&:hover': {
           transform: 'translateY(-4px)',
           boxShadow: 4,
@@ -98,6 +99,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         display: 'flex',
         flexDirection: 'column',
         transition: 'all 0.3s ease-in-out',
+        cursor: 'pointer',
         '&:hover': {
           transform: 'translateY(-4px)',
           boxShadow: 4,
@@ -116,7 +118,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       };
 
   return (
-    <Card sx={cardSx}>
+    <Card sx={cardSx} onClick={() => navigate(`/products/${product.id}`)}>
       <Box sx={{ position: 'relative' }}>
         <CardMedia
           component="img"
@@ -297,19 +299,13 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
       <CardActions sx={{ pt: 0, flexDirection: 'column', gap: 1 }}>
         <Button
-          variant="outlined"
-          size="small"
-          onClick={() => navigate(`/products/${product.id}`)}
-          sx={{ width: '100%' }}
-        >
-          View Details
-        </Button>
-        
-        <Button
           variant="contained"
           size="small"
           startIcon={<AddToCartIcon />}
-          onClick={() => onAddToCart(product)}
+          onClick={(e) => {
+            e.stopPropagation();
+            onAddToCart(product);
+          }}
           disabled={isOutOfStock}
           sx={{ width: '100%' }}
         >

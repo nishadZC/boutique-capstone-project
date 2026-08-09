@@ -43,6 +43,7 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
 interface AuthContextType extends AuthState {
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  updateProfile: (data: { firstName: string; lastName: string; phone?: string; address?: string }) => Promise<void>;
   clearError: () => void;
 }
 
@@ -79,7 +80,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem('refreshToken', response.refreshToken);
       dispatch({ type: 'LOGIN_SUCCESS', payload: response.user });
     } catch (error: any) {
-      dispatch({ type: 'LOGIN_FAILURE', payload: error.response?.data?.message || 'Login failed' });
+      const errorMessage = error.response?.data?.error || error.response?.data?.message || 'Login failed';
+      dispatch({ type: 'LOGIN_FAILURE', payload: errorMessage });
+      throw new Error(errorMessage);
     }
   };
 
@@ -92,12 +95,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     dispatch({ type: 'LOGOUT' });
   };
 
+  const updateProfile = async (data: { firstName: string; lastName: string; phone?: string; address?: string }) => {
+    try {
+      const updatedUser = await authService.updateProfile(data);
+      dispatch({ type: 'LOGIN_SUCCESS', payload: updatedUser });
+    } catch (error: any) {
+      console.error('Update profile error:', error);
+      throw error;
+    }
+  };
+
   const clearError = () => {
     dispatch({ type: 'CLEAR_ERROR' });
   };
 
   return (
-    <AuthContext.Provider value={{ ...state, login, logout, clearError }}>
+    <AuthContext.Provider value={{ ...state, login, logout, updateProfile, clearError }}>
       {children}
     </AuthContext.Provider>
   );

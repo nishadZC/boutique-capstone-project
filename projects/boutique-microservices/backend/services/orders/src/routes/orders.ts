@@ -10,7 +10,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
 router.post('/', async (req, res) => {
   try {
-    let extractedUserId = 'demo-user-id';
+    let extractedUserId: string | null = null;
     const token = req.headers.authorization?.replace('Bearer ', '');
     
     if (token) {
@@ -18,8 +18,18 @@ router.post('/', async (req, res) => {
         const decoded = jwt.verify(token, JWT_SECRET) as any;
         if (decoded.userId) extractedUserId = decoded.userId;
       } catch (e) {
-        console.error('Failed to verify token in orders post', e);
+        // If it's not a JWT, it might just be the raw UUID (as per demo auth)
+        if (/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(token)) {
+          extractedUserId = token;
+        } else {
+          console.error('Failed to parse token in orders post', e);
+        }
       }
+    }
+    
+    if (!req.body.userId && !extractedUserId) {
+      // Fallback to a valid dummy UUID if none provided, to avoid Postgres type errors
+      extractedUserId = '00000000-0000-0000-0000-000000000000';
     }
     
     // Use decoded userId, or fallback to request body / demo
@@ -89,7 +99,7 @@ router.post('/', async (req, res) => {
 
 router.get('/my-orders', async (req, res) => {
   try {
-    let extractedUserId = 'demo-user-id';
+    let extractedUserId: string | null = null;
     const token = req.headers.authorization?.replace('Bearer ', '');
     
     if (token) {
@@ -97,8 +107,17 @@ router.get('/my-orders', async (req, res) => {
         const decoded = jwt.verify(token, JWT_SECRET) as any;
         if (decoded.userId) extractedUserId = decoded.userId;
       } catch (e) {
-        console.error('Failed to verify token in orders get', e);
+        // If it's not a JWT, it might just be the raw UUID (as per demo auth)
+        if (/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(token)) {
+          extractedUserId = token;
+        } else {
+          console.error('Failed to parse token in orders get', e);
+        }
       }
+    }
+    
+    if (!req.query.userId && !extractedUserId) {
+       extractedUserId = '00000000-0000-0000-0000-000000000000';
     }
     
     const userId = req.query.userId as string || extractedUserId;
@@ -120,9 +139,52 @@ router.get('/my-orders', async (req, res) => {
       ORDER BY o.created_at DESC
     `, [userId]);
 
+    const ordersWithProducts = await Promise.all(result.rows.map(async (order: any) => {
+      // If there are no items (JSON_AGG can return [null]), handle it
+      let items = order.items || [];
+      if (items.length === 1 && items[0].id === null) items = [];
+
+      const itemsWithProducts = await Promise.all(items.map(async (item: any) => {
+        try {
+          const productResponse = await axios.get(`${PRODUCTS_SERVICE_URL}/${item.productId}`);
+          const productData = productResponse.data.data;
+          return {
+            ...item,
+            product: {
+              ...productData,
+              imageUrl: productData.image_url || '/product-images/placeholder.jpg'
+            }
+          };
+        } catch (error) {
+          console.error(`Failed to fetch product ${item.productId} for order ${order.id}`);
+          return {
+            ...item,
+            product: { name: 'Unknown Product', imageUrl: '', price: item.price }
+          };
+        }
+      }));
+
+      let parsedAddress = order.shipping_address;
+      if (typeof parsedAddress === 'string' && parsedAddress.trim().startsWith('{')) {
+        try { parsedAddress = JSON.parse(parsedAddress); } catch (e) { /* ignore */ }
+      }
+
+      return {
+        id: order.id,
+        userId: order.user_id,
+        status: order.status,
+        shippingAddress: parsedAddress,
+        paymentStatus: order.payment_status,
+        totalAmount: order.total_amount,
+        createdAt: order.created_at,
+        updatedAt: order.updated_at,
+        items: itemsWithProducts
+      };
+    }));
+
     const response: ServiceResponse<Order[]> = {
       success: true,
-      data: result.rows
+      data: ordersWithProducts
     };
 
     res.json(response);

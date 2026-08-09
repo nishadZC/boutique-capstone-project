@@ -19,7 +19,7 @@ router.post('/register', async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const result = await query(
-      'INSERT INTO users (email, password_hash, first_name, last_name, role) VALUES ($1, $2, $3, $4, $5) RETURNING id, email, first_name, last_name, role, created_at, updated_at',
+      'INSERT INTO users (email, password_hash, first_name, last_name, role) VALUES ($1, $2, $3, $4, $5) RETURNING id, email, first_name, last_name, role, phone, address, created_at, updated_at',
       [email, hashedPassword, firstName, lastName, 'customer']
     );
 
@@ -29,7 +29,9 @@ router.post('/register', async (req, res) => {
       email: user.email,
       firstName: user.first_name,
       lastName: user.last_name,
-      role: user.role
+      role: user.role,
+      phone: user.phone,
+      address: user.address
     };
 
     res.status(201).json({
@@ -39,6 +41,8 @@ router.post('/register', async (req, res) => {
         firstName: user.first_name,
         lastName: user.last_name,
         role: user.role,
+        phone: user.phone,
+        address: user.address,
         createdAt: user.created_at,
         updatedAt: user.updated_at
       },
@@ -59,13 +63,13 @@ router.post('/login', async (req, res) => {
     // For demo mode: accept any email with password "demo"
     if (password === 'demo') {
       let user;
-      const result = await query('SELECT id, email, first_name, last_name, role, created_at, updated_at FROM users WHERE email = $1', [email]);
+      const result = await query('SELECT id, email, first_name, last_name, role, phone, address, created_at, updated_at FROM users WHERE email = $1', [email]);
       
       if (result.rows.length === 0) {
         // Create demo user if doesn't exist
         const hashedPassword = await bcrypt.hash('demo', 10);
         const newUser = await query(
-          'INSERT INTO users (email, password_hash, first_name, last_name, role) VALUES ($1, $2, $3, $4, $5) RETURNING id, email, first_name, last_name, role, created_at, updated_at',
+          'INSERT INTO users (email, password_hash, first_name, last_name, role) VALUES ($1, $2, $3, $4, $5) RETURNING id, email, first_name, last_name, role, phone, address, created_at, updated_at',
           [email, hashedPassword, 'Demo', 'User', 'customer']
         );
         user = newUser.rows[0];
@@ -78,7 +82,9 @@ router.post('/login', async (req, res) => {
         email: user.email,
         firstName: user.first_name,
         lastName: user.last_name,
-        role: user.role
+        role: user.role,
+        phone: user.phone,
+        address: user.address
       };
 
       res.json({
@@ -88,6 +94,8 @@ router.post('/login', async (req, res) => {
           firstName: user.first_name,
           lastName: user.last_name,
           role: user.role,
+          phone: user.phone,
+          address: user.address,
           createdAt: user.created_at,
           updatedAt: user.updated_at
         },
@@ -99,7 +107,7 @@ router.post('/login', async (req, res) => {
     }
 
     // Normal password check
-    const result = await query('SELECT id, email, password_hash, first_name, last_name, role, created_at, updated_at FROM users WHERE email = $1', [email]);
+    const result = await query('SELECT id, email, password_hash, first_name, last_name, role, phone, address, created_at, updated_at FROM users WHERE email = $1', [email]);
     
     if (result.rows.length === 0) {
       return res.status(401).json({ error: 'Invalid credentials' });
@@ -117,7 +125,9 @@ router.post('/login', async (req, res) => {
       email: user.email,
       firstName: user.first_name,
       lastName: user.last_name,
-      role: user.role
+      role: user.role,
+      phone: user.phone,
+      address: user.address
     };
 
     res.json({
@@ -127,6 +137,8 @@ router.post('/login', async (req, res) => {
         firstName: user.first_name,
         lastName: user.last_name,
         role: user.role,
+        phone: user.phone,
+        address: user.address,
         createdAt: user.created_at,
         updatedAt: user.updated_at
       },
@@ -155,7 +167,7 @@ router.get('/me', async (req, res) => {
 
   try {
     const result = await query(
-      'SELECT id, email, first_name, last_name, role FROM users WHERE id = $1',
+      'SELECT id, email, first_name, last_name, role, phone, address FROM users WHERE id = $1',
       [userId]
     );
     if (result.rows.length === 0) {
@@ -167,10 +179,64 @@ router.get('/me', async (req, res) => {
       email: user.email,
       firstName: user.first_name,
       lastName: user.last_name,
-      role: user.role
+      role: user.role,
+      phone: user.phone,
+      address: user.address
     });
   } catch (error) {
     res.status(500).json({ error: 'Failed to get user' });
+  }
+});
+
+router.put('/profile', async (req, res) => {
+  const authHeader = req.headers.authorization;
+  const userId = authHeader?.startsWith('Bearer ') ? authHeader.split(' ')[1] : null;
+
+  if (!userId || userId === 'undefined') {
+    return res.status(401).json({ error: 'Not logged in' });
+  }
+
+  try {
+    const { firstName, lastName, phone, address } = req.body;
+    
+    const result = await query(
+      'UPDATE users SET first_name = $1, last_name = $2, phone = $3, address = $4, updated_at = CURRENT_TIMESTAMP WHERE id = $5 RETURNING id, email, first_name, last_name, role, phone, address, created_at, updated_at',
+      [firstName, lastName, phone, address, userId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const user = result.rows[0];
+    
+    // Update memory cache for demo
+    if (currentUser && currentUser.id === user.id) {
+      currentUser = {
+        id: user.id,
+        email: user.email,
+        firstName: user.first_name,
+        lastName: user.last_name,
+        role: user.role,
+        phone: user.phone,
+        address: user.address
+      };
+    }
+
+    res.json({
+      id: user.id,
+      email: user.email,
+      firstName: user.first_name,
+      lastName: user.last_name,
+      role: user.role,
+      phone: user.phone,
+      address: user.address,
+      createdAt: user.created_at,
+      updatedAt: user.updated_at
+    });
+  } catch (error) {
+    console.error('Profile update error:', error);
+    res.status(500).json({ error: 'Failed to update profile' });
   }
 });
 

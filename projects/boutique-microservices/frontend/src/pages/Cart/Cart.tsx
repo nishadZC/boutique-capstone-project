@@ -16,6 +16,7 @@ import {
   StepLabel,
   Alert,
   Snackbar,
+  TextField,
 } from '@mui/material';
 import {
   Add as AddIcon,
@@ -26,14 +27,24 @@ import {
   Security as SecurityIcon,
 } from '@mui/icons-material';
 import { useCart } from '../../contexts/CartContext';
+import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 import { orderService } from '../../services/orderService';
 const Cart: React.FC = () => {
   const { items, total, removeItem, updateQuantity, clearCart } = useCart();
+  const { user, updateProfile } = useAuth();
   const navigate = useNavigate();
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [removedItemName, setRemovedItemName] = useState('');
+  const [address, setAddress] = useState(user?.address || '');
+  const [addressError, setAddressError] = useState('');
+
+  React.useEffect(() => {
+    if (user?.address && !address) {
+      setAddress(user.address);
+    }
+  }, [user]);
 
   const handleQuantityChange = (productId: string, delta: number) => {
     const item = items.find(item => item.id === productId);
@@ -52,11 +63,31 @@ const Cart: React.FC = () => {
   };
 
   const handleCheckout = async () => {
+    if (!address.trim()) {
+      setAddressError('Please enter a shipping address before proceeding to checkout.');
+      return;
+    }
+    setAddressError('');
     try {
       const orderData = {
         items: items.map(item => ({ productId: item.id, quantity: item.quantity })),
-        shippingAddress: { address: 'Demo Address, 123 Luxury St, Fashion City' }
+        shippingAddress: { address: address }
       };
+      
+      // Update the user's profile address if it has changed
+      if (user && user.address !== address) {
+        try {
+          await updateProfile({
+            firstName: user.firstName,
+            lastName: user.lastName,
+            phone: user.phone,
+            address: address
+          });
+        } catch (profileError) {
+          console.error('Failed to update profile address during checkout:', profileError);
+        }
+      }
+
       await orderService.createOrder(orderData);
       clearCart();
       navigate('/orders');
@@ -274,6 +305,26 @@ const Cart: React.FC = () => {
                     ${finalTotal.toFixed(2)}
                   </Typography>
                 </Box>
+              </Box>
+
+              <Box sx={{ mb: 3 }}>
+                <Typography variant="subtitle2" gutterBottom>
+                  Shipping Address
+                </Typography>
+                <TextField
+                  fullWidth
+                  multiline
+                  rows={2}
+                  size="small"
+                  placeholder="Enter your shipping address"
+                  value={address}
+                  onChange={(e) => {
+                    setAddress(e.target.value);
+                    if (addressError) setAddressError('');
+                  }}
+                  error={!!addressError}
+                  helperText={addressError}
+                />
               </Box>
 
               <Box sx={{ mb: 2, display: 'flex', justifyContent: 'center' }}>

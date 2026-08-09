@@ -347,7 +347,7 @@ const ProductDetail: React.FC = () => {
                   fullWidth
                   sx={{ py: 1.5 }}
                 >
-                  View Cart ({quantity} {quantity === 1 ? 'item' : 'items'})
+                  View Cart
                 </Button>
               </Paper>
               

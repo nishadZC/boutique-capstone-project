@@ -19,6 +19,7 @@ import {
   Home,
   ShoppingBag,
   Menu as MenuIcon,
+  ExitToApp as LogoutIcon,
 } from '@mui/icons-material';
 import { useAuth } from '../../contexts/AuthContext';
 import { useCart } from '../../contexts/CartContext';
@@ -104,9 +105,11 @@ const Layout: React.FC = () => {
             </Badge>
           </IconButton>
           {isAuthenticated ? (
-            <IconButton color="inherit" onClick={logout}>
-              <AccountCircle />
-            </IconButton>
+            <Box sx={{ display: 'flex' }}>
+              <IconButton color="inherit" onClick={logout}>
+                <LogoutIcon />
+              </IconButton>
+            </Box>
           ) : (
             <IconButton color="inherit" onClick={() => navigate('/login')}>
               <AccountCircle />

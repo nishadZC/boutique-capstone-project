@@ -109,13 +109,26 @@ You should see containers for: `frontend`, `gateway`, `auth`, `product-service`,
 
 ### Run without Docker (Node.js)
 
+When running locally without Docker, you must set up your PostgreSQL databases manually.
+
+1. Ensure PostgreSQL is installed locally and running on port 5432.
+2. Ensure you have a PostgreSQL user named `postgres` with the password `root`.
+3. Inside `projects/boutique-microservices/backend/services/`, configure the `.env` files for the services to use `DB_HOST=localhost`, `DB_USER=postgres`, and `DB_PASSWORD=root`.
+4. Initialize the databases and schemas by running the setup scripts:
+```bash
+cd projects/boutique-microservices/database/init
+node run-schema.js
+node fix-orders-db.js
+node add-profile-cols.js
+```
+5. Install dependencies and start the application:
 ```bash
 cd projects/boutique-microservices
 npm install
 npm run dev          # starts all services concurrently
 ```
 
-Or individually:
+Or start them individually:
 
 ```bash
 npm run dev:backend   # all backend services
