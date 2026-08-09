@@ -82,6 +82,7 @@ resource "aws_iam_role_policy_attachment" "aws_load_balancer_controller" {
 }
 
 resource "helm_release" "aws_load_balancer_controller" {
+  provider   = helm.eks
   name       = "aws-load-balancer-controller"
   namespace  = "kube-system"
   repository = "https://aws.github.io/eks-charts"
