@@ -70,7 +70,7 @@ data "http" "aws_load_balancer_controller_iam_policy" {
 }
 
 resource "aws_iam_policy" "aws_load_balancer_controller" {
-  name        = "${module.eks.cluster_name}-AWSLoadBalancerControllerIAMPolicy"
+  name_prefix = "AWSLoadBalancerController-"
   path        = "/"
   description = "AWS Load Balancer Controller IAM Policy"
   policy      = data.http.aws_load_balancer_controller_iam_policy.response_body
