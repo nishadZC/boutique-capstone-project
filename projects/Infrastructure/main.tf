@@ -65,9 +65,20 @@ resource "aws_iam_role" "aws_load_balancer_controller" {
   })
 }
 
+data "http" "aws_load_balancer_controller_iam_policy" {
+  url = "https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.7.1/docs/install/iam_policy.json"
+}
+
+resource "aws_iam_policy" "aws_load_balancer_controller" {
+  name        = "${module.eks.cluster_name}-AWSLoadBalancerControllerIAMPolicy"
+  path        = "/"
+  description = "AWS Load Balancer Controller IAM Policy"
+  policy      = data.http.aws_load_balancer_controller_iam_policy.response_body
+}
+
 resource "aws_iam_role_policy_attachment" "aws_load_balancer_controller" {
   role       = aws_iam_role.aws_load_balancer_controller.name
-  policy_arn = "arn:aws:iam::aws:policy/AWSLoadBalancerControllerIAMPolicy"
+  policy_arn = aws_iam_policy.aws_load_balancer_controller.arn
 }
 
 resource "helm_release" "aws_load_balancer_controller" {
