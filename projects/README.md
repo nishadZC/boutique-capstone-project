@@ -194,7 +194,7 @@ This takes ~15 minutes. Terraform outputs the cluster name and ECR URLs when don
 ```bash
 aws eks update-kubeconfig \
   --region us-east-1 \
-  --name eks-cluster
+  --name boutique-eks
 ```
 
 Verify nodes are ready:
@@ -397,6 +397,7 @@ Get the admin password:
 ```bash
 kubectl -n argocd get secret argocd-initial-admin-secret \
   -o jsonpath="{.data.password}" | base64 -d
+echo
 ```
 
 - Username: `admin`
@@ -603,6 +604,7 @@ Username: `admin`
 ```bash
 kubectl -n argocd get secret argocd-initial-admin-secret \
   -o jsonpath="{.data.password}" | base64 -d
+echo
 ```
 Username: `admin`
 

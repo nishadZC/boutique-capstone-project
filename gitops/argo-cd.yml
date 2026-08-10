@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/nishadZC/devops-playbook.git'
+    repoURL: 'https://github.com/nishadZC/boutique-capstone-project'
     targetRevision: main
     path: gitops
   destination:
