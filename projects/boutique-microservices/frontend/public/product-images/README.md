@@ -7,7 +7,7 @@ This folder contains production-ready images for your boutique products.
 Place your AI-generated production images with these exact filenames:
 
 1. `silk-evening-gown.jpg` - For "Silk Evening Gown" product
-2. `cashmere-coat.jpg` - For "Cashmere Coat" product  
+2. `cashmere-coat.jpg` - For "Cashmere Coat" product
 3. `leather-handbag.jpg` - For "Leather Handbag" product
 4. `diamond-necklace.jpg` - For "Diamond Necklace" product
 5. `designer-heels.jpg` - For "Designer Heels" product
@@ -25,6 +25,7 @@ Place your AI-generated production images with these exact filenames:
 When you add new products, update the `getImageForProduct()` function in `simple-product-service.js` to include appropriate image mapping.
 
 Example for a new product:
+
 ```javascript
 else if (productName.includes('product name')) {
   return '/product-images/new-product-image.jpg';
