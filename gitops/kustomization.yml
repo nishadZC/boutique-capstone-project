@@ -6,6 +6,7 @@ namespace: boutique
 resources:
   - namespace.yml
   - secrets.yml
+  - k8s/database/configmap.yml
   - k8s/database/statefulset.yml
   - k8s/database/service.yml
   - k8s/backend/gateway.yml
@@ -17,11 +18,3 @@ resources:
   - k8s/backend/user-service.yml
   - k8s/frontend/deployment.yml
   - k8s/grafana-dashboard.yml
-
-configMapGenerator:
-  - name: boutique-db-dump
-    files:
-      - k8s/database/boutique_full.sql
-
-generatorOptions:
-  disableNameSuffixHash: true
