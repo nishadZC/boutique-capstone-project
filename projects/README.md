@@ -574,7 +574,7 @@ Logs appear in **CloudWatch → Log groups → /eks/boutique/pods**.
 Run all at once in the background:
 
 ```bash
-kubectl port-forward svc/frontend 3000:3000 -n boutique &
+kubectl port-forward svc/frontend 3000:80 -n boutique &
 kubectl port-forward svc/gateway 3001:3001 -n boutique &
 kubectl port-forward svc/kube-prometheus-stack-prometheus 9090:9090 -n monitoring &
 kubectl port-forward svc/kube-prometheus-stack-grafana 8080:80 -n monitoring &
