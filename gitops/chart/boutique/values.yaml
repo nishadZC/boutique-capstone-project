@@ -1,0 +1,27 @@
+# Default values for boutique.
+environment: development
+
+global:
+  imageRegistry: "368763425814.dkr.ecr.us-east-1.amazonaws.com"
+  imageTag: "5aea34f048658308c0d7bfb81ab50c3bd2a4ff03"
+
+auth:
+  replicaCount: 1
+
+frontend:
+  replicaCount: 1
+
+gateway:
+  replicaCount: 1
+
+orderService:
+  replicaCount: 1
+
+orders:
+  replicaCount: 1
+
+productService:
+  replicaCount: 1
+
+userService:
+  replicaCount: 1

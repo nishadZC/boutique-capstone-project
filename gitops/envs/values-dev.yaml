@@ -1,0 +1,16 @@
+environment: development
+
+auth:
+  replicaCount: 1
+frontend:
+  replicaCount: 1
+gateway:
+  replicaCount: 1
+orderService:
+  replicaCount: 1
+orders:
+  replicaCount: 1
+productService:
+  replicaCount: 1
+userService:
+  replicaCount: 1

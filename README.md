@@ -27,11 +27,15 @@ DevOps-Practice-Guide/
 │   ├── README.md
 │   ├── boutique-microservices/
 │   └── Infrastructure/
+│       ├── core/
+│       └── envs/
 │
 ├── gitops/
-│   ├── argo-cd.yml
-│   ├── kustomization.yml
-│   └── k8s/
+│   ├── argo-cd-dev.yml
+│   ├── argo-cd-prod.yml
+│   ├── chart/
+│   │   └── boutique/
+│   └── envs/
 │
 └── .github/
     └── workflows/
@@ -49,7 +53,7 @@ DevOps-Practice-Guide/
 | Orchestration      | Kubernetes, AWS EKS        |
 | Infrastructure     | Terraform                  |
 | CI/CD              | GitHub Actions             |
-| GitOps             | ArgoCD, Kustomize          |
+| GitOps             | ArgoCD, Helm               |
 | Monitoring         | Prometheus, Grafana        |
 | Logging            | AWS Fluent Bit, CloudWatch |
 | Container Registry | Amazon ECR                 |

@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.auth.replicaCount }}
+  selector:
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+        - name: auth
+          image: {{ .Values.global.imageRegistry }}/auth:{{ .Values.global.imageTag }}
+          ports:
+            - containerPort: 3002
+          env:
+            - name: NODE_ENV
+              value: {{ .Values.environment }}
+            - name: PORT
+              value: "3002"
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: boutique-secrets
+                  key: AUTH_DB_URL
+
+--- 
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    app: auth
+  ports:
+    - protocol: TCP
+      port: 3002
+      targetPort: 3002
+  type: ClusterIP
+
