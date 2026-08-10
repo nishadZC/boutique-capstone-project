@@ -37,7 +37,7 @@ module "argocd" {
     kubernetes = kubernetes.eks
     helm       = helm.eks
   }
-  depends_on = [module.eks]
+  depends_on = [module.eks, helm_release.aws_load_balancer_controller]
 }
 
 resource "aws_iam_role" "aws_load_balancer_controller" {
