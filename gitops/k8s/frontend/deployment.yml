@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: 368763425814.dkr.ecr.us-east-1.amazonaws.com/frontend:f360db11272cc6c12af0dde615c9b99a57b82e10
+          image: 368763425814.dkr.ecr.us-east-1.amazonaws.com/frontend:5aea34f048658308c0d7bfb81ab50c3bd2a4ff03
           ports:
             - containerPort: 3000
           env:
@@ -27,10 +27,6 @@ kind: Service
 metadata:
   name: frontend
   namespace: boutique
-  annotations:
-    service.beta.kubernetes.io/aws-load-balancer-type: external
-    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: ip
-    service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
 spec:
   selector:
     app: frontend
@@ -38,5 +34,4 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 3000
-  type: LoadBalancer
-
+  type: ClusterIP

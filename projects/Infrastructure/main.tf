@@ -122,3 +122,29 @@ resource "helm_release" "aws_load_balancer_controller" {
   depends_on = [aws_iam_role_policy_attachment.aws_load_balancer_controller, module.eks]
 }
 
+resource "helm_release" "ingress_nginx" {
+  provider         = helm.eks
+  name             = "ingress-nginx"
+  repository       = "https://kubernetes.github.io/ingress-nginx"
+  chart            = "ingress-nginx"
+  version          = "4.10.0"
+  namespace        = "ingress-nginx"
+  create_namespace = true
+
+  set {
+    name  = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-type"
+    value = "external"
+  }
+
+  set {
+    name  = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-nlb-target-type"
+    value = "ip"
+  }
+
+  set {
+    name  = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-scheme"
+    value = "internet-facing"
+  }
+
+  depends_on = [module.eks]
+}
