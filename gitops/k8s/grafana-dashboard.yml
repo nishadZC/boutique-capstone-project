@@ -252,7 +252,7 @@ data:
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "sum(http_requests_in_progress{job=~\"$service\"})",
+              "expr": "sum(http_requests_in_progress{service_name=~\"$service\"})",
               "refId": "A"
             }
           ],

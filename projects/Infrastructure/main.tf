@@ -33,6 +33,7 @@ module "ecr" {
 
 module "argocd" {
   source = "./modules/argocd"
+  teams_webhook_url = var.teams_webhook_url
   providers = {
     kubernetes = kubernetes.eks
     helm       = helm.eks

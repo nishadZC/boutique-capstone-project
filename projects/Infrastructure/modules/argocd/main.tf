@@ -73,6 +73,30 @@ resource "helm_release" "monitoring" {
       }
 
       alertmanager = {
+        config = {
+          route = {
+            group_by = ["alertname"]
+            receiver = "teams"
+            routes = [
+              {
+                match = {
+                  alertname = "UserLoggedIn"
+                }
+                receiver = "teams"
+              }
+            ]
+          }
+          receivers = [
+            {
+              name = "teams"
+              webhook_configs = [
+                {
+                  url = var.teams_webhook_url
+                }
+              ]
+            }
+          ]
+        }
         service = {
           type = "ClusterIP"
         }

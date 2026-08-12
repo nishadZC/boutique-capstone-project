@@ -41,6 +41,7 @@ spec:
     app: user-service
   ports:
     - protocol: TCP
+      name: http
       port: 3006
       targetPort: 3006
   type: ClusterIP

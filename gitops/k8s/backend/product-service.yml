@@ -41,6 +41,7 @@ spec:
     app: product-service
   ports:
     - protocol: TCP
+      name: http
       port: 3003
       targetPort: 3003
   type: ClusterIP

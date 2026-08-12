@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: auth-alerts
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  groups:
+    - name: AuthAlerts
+      rules:
+        - alert: UserLoggedIn
+          expr: increase(http_requests_total{route="/login", status_code="200", service_name="auth"}[1m]) > 0
+          for: 1m
+          labels:
+            severity: info
+          annotations:
+            summary: "A user has logged in"
+            description: "A successful login event was detected in the last minute."
