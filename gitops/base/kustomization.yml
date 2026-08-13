@@ -17,3 +17,4 @@ resources:
   - k8s/frontend/deployment.yml
   - k8s/frontend/ingress.yml
   - k8s/grafana-dashboard.yml
+  - k8s/monitoring/prometheus-rules.yml

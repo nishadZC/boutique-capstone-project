@@ -528,7 +528,7 @@ data:
           "targets": [
             {
               "datasource": { "type": "prometheus", "uid": "prometheus" },
-              "expr": "sum by (pod) (rate(container_cpu_usage_seconds_total{namespace=\"boutique\", container!=\"\", container!=\"POD\"}[$__rate_interval]))",
+              "expr": "sum by (pod) (rate(container_cpu_usage_seconds_total{namespace=~\"boutique-.*\", container!=\"\", container!=\"POD\"}[$__rate_interval]))",
               "legendFormat": "{{pod}}",
               "refId": "A"
             }
@@ -568,7 +568,7 @@ data:
           "targets": [
             {
               "datasource": { "type": "prometheus", "uid": "prometheus" },
-              "expr": "sum by (pod) (container_memory_working_set_bytes{namespace=\"boutique\", container!=\"\", container!=\"POD\"})",
+              "expr": "sum by (pod) (container_memory_working_set_bytes{namespace=~\"boutique-.*\", container!=\"\", container!=\"POD\"})",
               "legendFormat": "{{pod}}",
               "refId": "A"
             }
@@ -609,7 +609,7 @@ data:
           "targets": [
             {
               "datasource": { "type": "prometheus", "uid": "prometheus" },
-              "expr": "kube_pod_container_status_restarts_total{namespace=\"boutique\", container!=\"\"}",
+              "expr": "kube_pod_container_status_restarts_total{namespace=~\"boutique-.*\", container!=\"\"}",
               "legendFormat": "{{container}}",
               "refId": "A"
             }
