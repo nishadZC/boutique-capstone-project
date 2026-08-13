@@ -50,3 +50,19 @@ boutique-capstone-project/
 | Logging            | AWS Fluent Bit, CloudWatch |
 | Container Registry | Amazon ECR                 |
 | Cloud              | AWS                        |
+
+## Simulating Traffic and Monitoring
+
+If you are using the `simulate-traffic.sh` script to test metrics in Grafana, ensure you point the URL to the API Gateway to properly trigger API metrics:
+
+```bash
+# Example URL in simulate-traffic.sh
+URL="http://<your-ingress-url>/api/products"
+```
+If you send traffic to the root (`/`), it will hit the React frontend and not register on the backend API Grafana dashboards.
+
+**Grafana Dashboard Enhancements**
+The provided Grafana dashboard (`gitops/base/k8s/grafana-dashboard.yml`) includes panels to track the total requests to the gateway.
+To track request breakdowns by microservice, PromQL queries like these are included:
+- `sum by (route) (http_requests_total{service_name="gateway"})` (Breakdown of all API routes)
+- `sum(http_requests_total{service_name="gateway", route=~"^/api/auth.*"})` (Auth requests only)
