@@ -91,7 +91,7 @@ resource "helm_release" "monitoring" {
               name = "teams"
               webhook_configs = [
                 {
-                  url = var.teams_webhook_url
+                  url = "http://prometheus-msteams.monitoring.svc.cluster.local:2000/alertmanager"
                 }
               ]
             }
@@ -100,6 +100,27 @@ resource "helm_release" "monitoring" {
         service = {
           type = "ClusterIP"
         }
+      }
+    })
+  ]
+
+  depends_on = [
+    kubernetes_namespace_v1.monitoring
+  ]
+}
+
+resource "helm_release" "prometheus_msteams" {
+  name       = "prometheus-msteams"
+  namespace  = kubernetes_namespace_v1.monitoring.metadata[0].name
+  repository = "https://prometheus-msteams.github.io/prometheus-msteams/"
+  chart      = "prometheus-msteams"
+  
+  create_namespace = false
+
+  values = [
+    yamlencode({
+      connectors = {
+        alertmanager = var.teams_webhook_url
       }
     })
   ]
