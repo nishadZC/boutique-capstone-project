@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: boutique-postgres
-  namespace: boutique
+
 spec:
   serviceName: boutique-postgres
   replicas: 1
