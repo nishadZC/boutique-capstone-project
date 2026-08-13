@@ -782,6 +782,126 @@ data:
           ],
           "title": "Auth Requests (Gateway)",
           "type": "timeseries"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "palette-classic" },
+              "custom": {
+                "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1,
+                "showPoints": "never", "spanNulls": false,
+                "axisCenteredZero": false, "axisColorMode": "text",
+                "axisLabel": "", "axisPlacement": "auto", "barAlignment": 0,
+                "gradientMode": "none",
+                "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+                "lineInterpolation": "linear", "pointSize": 5,
+                "scaleDistribution": { "type": "linear" },
+                "stacking": { "group": "A", "mode": "none" },
+                "thresholdsStyle": { "mode": "off" }
+              },
+              "mappings": [],
+              "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 52 },
+          "id": 15,
+          "options": {
+            "legend": { "calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": true },
+            "tooltip": { "mode": "single", "sort": "none" }
+          },
+          "targets": [
+            {
+              "datasource": { "type": "prometheus", "uid": "prometheus" },
+              "expr": "sum(http_requests_total{service_name=\"gateway\", route=~\"^/api/products.*\"})",
+              "legendFormat": "Products Requests",
+              "refId": "A"
+            }
+          ],
+          "title": "Products Requests (Gateway)",
+          "type": "timeseries"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "palette-classic" },
+              "custom": {
+                "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1,
+                "showPoints": "never", "spanNulls": false,
+                "axisCenteredZero": false, "axisColorMode": "text",
+                "axisLabel": "", "axisPlacement": "auto", "barAlignment": 0,
+                "gradientMode": "none",
+                "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+                "lineInterpolation": "linear", "pointSize": 5,
+                "scaleDistribution": { "type": "linear" },
+                "stacking": { "group": "A", "mode": "none" },
+                "thresholdsStyle": { "mode": "off" }
+              },
+              "mappings": [],
+              "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 52 },
+          "id": 16,
+          "options": {
+            "legend": { "calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": true },
+            "tooltip": { "mode": "single", "sort": "none" }
+          },
+          "targets": [
+            {
+              "datasource": { "type": "prometheus", "uid": "prometheus" },
+              "expr": "sum(http_requests_total{service_name=\"gateway\", route=~\"^/api/orders.*\"})",
+              "legendFormat": "Orders Requests",
+              "refId": "A"
+            }
+          ],
+          "title": "Orders Requests (Gateway)",
+          "type": "timeseries"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "palette-classic" },
+              "custom": {
+                "drawStyle": "line", "fillOpacity": 10, "lineWidth": 1,
+                "showPoints": "never", "spanNulls": false,
+                "axisCenteredZero": false, "axisColorMode": "text",
+                "axisLabel": "", "axisPlacement": "auto", "barAlignment": 0,
+                "gradientMode": "none",
+                "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+                "lineInterpolation": "linear", "pointSize": 5,
+                "scaleDistribution": { "type": "linear" },
+                "stacking": { "group": "A", "mode": "none" },
+                "thresholdsStyle": { "mode": "off" }
+              },
+              "mappings": [],
+              "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 60 },
+          "id": 17,
+          "options": {
+            "legend": { "calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": true },
+            "tooltip": { "mode": "single", "sort": "none" }
+          },
+          "targets": [
+            {
+              "datasource": { "type": "prometheus", "uid": "prometheus" },
+              "expr": "sum(http_requests_total{service_name=\"gateway\", route=~\"^/api/users.*\"})",
+              "legendFormat": "Users Requests",
+              "refId": "A"
+            }
+          ],
+          "title": "Users Requests (Gateway)",
+          "type": "timeseries"
         }
       ],
       "refresh": "5s",
