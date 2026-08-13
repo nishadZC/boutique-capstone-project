@@ -115,6 +115,7 @@ resource "helm_release" "prometheus_msteams" {
   repository = "https://prometheus-msteams.github.io/prometheus-msteams/"
   chart      = "prometheus-msteams"
   
+  wait             = false
   timeout          = 600
   create_namespace = false
 

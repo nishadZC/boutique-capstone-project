@@ -18,24 +18,20 @@ An end-to-end DevOps project that demonstrates how a microservices application c
 ## Repository Structure
 
 ```text
-DevOps-Practice-Guide/
-├── docs/
-│   ├── part1-system-design.md
-│   └── part2-workflow.md
-│
-├── projects/
-│   ├── README.md
-│   ├── boutique-microservices/
-│   └── Infrastructure/
-│
+boutique-capstone-project/
+├── .github/
+│   └── workflows/
 ├── gitops/
+│   ├── k8s/
 │   ├── argo-cd.yml
 │   ├── kustomization.yml
-│   └── k8s/
-│
-└── .github/
-    └── workflows/
-        └── ci.yml
+│   ├── namespace.yml
+│   └── secrets.yml
+└── projects/
+    ├── boutique-microservices/
+    ├── Infrastructure/
+    ├── Issues.md
+    └── README.md
 ```
 
 ## Tech Stack
