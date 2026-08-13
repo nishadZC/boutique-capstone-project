@@ -457,29 +457,35 @@ Open http://localhost:9090
 #### Useful PromQL queries to try
 
 ```promql
-# Request rate per service
+# 1. Request rate per service (Requests per second)
 sum by (job) (rate(http_requests_total[5m]))
 
-# 95th percentile response time
+# 2. 95th percentile response time (Latency)
 histogram_quantile(0.95, sum by (le) (rate(http_request_duration_seconds_bucket[5m])))
 
-# 5xx error rate per service
+# 3. 5xx Server Error rate per service
 sum by (job) (rate(http_requests_total{status_code=~"5.."}[5m]))
 
-# Pod CPU usage
+# 4. 4xx Client Error rate per service
+sum by (job) (rate(http_requests_total{status_code=~"4.."}[5m]))
+
+# 5. Pod CPU usage in the boutique namespace
 sum by (pod) (rate(container_cpu_usage_seconds_total{namespace="boutique"}[5m]))
 
-# Pod memory usage
+# 6. Pod memory usage in the boutique namespace
 sum by (pod) (container_memory_working_set_bytes{namespace="boutique"})
 
-# Pod restart count
+# 7. Pod restart count (Identify crash-looping pods)
 kube_pod_container_status_restarts_total{namespace="boutique"}
 
-# Which services are up
-up{job=~"gateway|auth|product-service|order-service|orders|user-service"}
+# 8. Service Health / Uptime (1 = Up, 0 = Down)
+up{namespace="boutique"}
 
-# Node.js heap memory
+# 9. Node.js heap memory usage (For Node.js backend services)
 nodejs_heap_size_used_bytes
+
+# 10. Node.js Event Loop Lag (Indicates CPU pressure on Node.js apps)
+nodejs_eventloop_lag_seconds
 ```
 
 Go to **Graph** tab to visualise any query over time.

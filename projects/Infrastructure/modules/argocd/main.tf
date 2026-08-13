@@ -121,9 +121,11 @@ resource "helm_release" "prometheus_msteams" {
 
   values = [
     yamlencode({
-      connectors = {
-        alertmanager = var.teams_webhook_url
-      }
+      connectors = [
+        {
+          alertmanager = var.teams_webhook_url
+        }
+      ]
     })
   ]
 
