@@ -80,7 +80,7 @@ resource "helm_release" "monitoring" {
             routes = [
               {
                 match = {
-                  alertname = "UserLoggedIn"
+                  alertname = "HighTraffic"
                 }
                 receiver = "teams"
               }
