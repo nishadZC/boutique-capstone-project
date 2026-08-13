@@ -14,4 +14,5 @@ module "boutique" {
   max_size          = var.max_size
   disk_size         = var.disk_size
   teams_webhook_url = var.teams_webhook_url
+  db_password       = var.db_password
 }

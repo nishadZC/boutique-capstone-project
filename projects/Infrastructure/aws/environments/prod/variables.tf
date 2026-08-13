@@ -68,3 +68,9 @@ variable "teams_webhook_url" {
   type        = string
   sensitive   = true
 }
+
+variable "db_password" {
+  description = "PostgreSQL Database password"
+  type        = string
+  sensitive   = true
+}
