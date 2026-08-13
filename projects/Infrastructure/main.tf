@@ -146,5 +146,5 @@ resource "helm_release" "ingress_nginx" {
     value = "internet-facing"
   }
 
-  depends_on = [module.eks]
+  depends_on = [module.eks, helm_release.aws_load_balancer_controller]
 }
