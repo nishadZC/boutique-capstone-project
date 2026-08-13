@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-service
+  namespace: boutique
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order-service
+  template:
+    metadata:
+      labels:
+        app: order-service
+    spec:
+      containers:
+        - name: order-service
+          image: 368763425814.dkr.ecr.us-east-1.amazonaws.com/order-service:148cc4e376895e3592583be8f466cec4691f18a7
+          ports:
+            - containerPort: 3004
+          env:
+            - name: NODE_ENV
+              value: development
+            - name: PORT
+              value: "3004"
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: boutique-secrets
+                  key: ORDERS_DB_URL
+            - name: AUTH_SERVICE_URL
+              value: "http://auth:3002"
+            - name: PRODUCT_SERVICE_URL
+              value: "http://product-service:3003"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-service
+  namespace: boutique
+spec:
+  selector:
+    app: order-service
+  ports:
+    - protocol: TCP
+      name: http
+      port: 3002
+      targetPort: 3002
+  type: ClusterIP

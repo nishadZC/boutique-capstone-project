@@ -1,5 +1,5 @@
 module "vpc" {
-  source = "./modules/vpc"
+  source = "../vpc"
 
   vpc_name     = var.vpc_name
   cidr_block   = var.vpc_cidr
@@ -10,7 +10,7 @@ module "vpc" {
 
 
 module "eks" {
-  source = "./modules/eks"
+  source = "../eks"
 
   cluster_name     = var.cluster_name
   node_group_name  = var.node_group_name
@@ -24,15 +24,9 @@ module "eks" {
   depends_on = [module.vpc]
 }
 
-module "ecr" {
-  source = "./modules/ecr"
-  repositories = var.repositories
-}
-
-
 
 module "argocd" {
-  source = "./modules/argocd"
+  source = "../argocd"
   teams_webhook_url = var.teams_webhook_url
   providers = {
     kubernetes = kubernetes.eks

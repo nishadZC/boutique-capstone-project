@@ -1,6 +1,13 @@
 terraform {
   required_version = ">= 1.5"
 
+  cloud {
+    organization = "devops-learning-organization"
+    workspaces {
+      name = "boutique-prod"
+    }
+  }
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -23,4 +30,11 @@ terraform {
 
 provider "aws" {
   region = var.region
+
+  default_tags {
+    tags = {
+      Environment = "prod"
+      Project     = "boutique"
+    }
+  }
 }
