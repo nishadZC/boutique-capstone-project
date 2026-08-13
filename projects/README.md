@@ -490,6 +490,23 @@ nodejs_eventloop_lag_seconds
 
 Go to **Graph** tab to visualise any query over time.
 
+#### Testing MS Teams Alerts (High Traffic)
+
+To verify that the monitoring stack correctly fires alerts and sends them to Microsoft Teams, a `HighTraffic` alert rule is configured. It triggers when the application receives more than 10 requests per second for a continuous minute.
+
+You can simulate high traffic using the provided script:
+
+```bash
+# 1. Apply the alerting rules to the cluster
+kubectl apply -f gitops/k8s/monitoring/prometheus-rules.yml
+
+# 2. Run the load generator script
+chmod +x simulate-traffic.sh
+./simulate-traffic.sh
+```
+
+Leave the script running for at least **1-2 minutes**. Once Prometheus detects the sustained load, it will fire the `HighTraffic` alert and Alertmanager will forward it to your MS Teams channel. Press `Ctrl+C` to stop the script once you receive the notification.
+
 ---
 
 ### Grafana
