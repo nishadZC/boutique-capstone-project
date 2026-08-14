@@ -1,68 +1,109 @@
-# DevOps Project
+<div align="center">
+  <h1>Multi-Cloud DevOps & Microservices Capstone Project</h1>
+  <p><i>An Enterprise-Grade DevSecOps Pipeline across AWS and Azure</i></p>
+  <img src="https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white" />
+  <img src="https://img.shields.io/badge/Azure-0089D6?style=for-the-badge&logo=microsoft-azure&logoColor=white" />
+  <img src="https://img.shields.io/badge/Kubernetes-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white" />
+  <img src="https://img.shields.io/badge/Terraform-7B42BC?style=for-the-badge&logo=terraform&logoColor=white" />
+  <img src="https://img.shields.io/badge/ArgoCD-EF7B4D?style=for-the-badge&logo=argo&logoColor=white" />
+</div>
 
-An end-to-end DevOps project that demonstrates how a microservices application can be developed, containerized, deployed to AWS EKS, and managed using CI/CD, GitOps, and monitoring.
+<br>
 
-## What This Project Covers
+## 📖 Problem Statement
 
-* Microservices application development using **React, Node.js, and PostgreSQL**
-* Containerization using **Docker and Docker Compose**
-* Infrastructure provisioning using **Terraform**
-* Kubernetes deployment on **AWS EKS**
-* CI/CD automation using **GitHub Actions**
-* GitOps-based deployments using **ArgoCD and Kustomize**
-* Application monitoring using **Prometheus and Grafana**
-* Centralized logging using **AWS Fluent Bit and CloudWatch**
-* AWS networking, IAM, ECR, and EKS configuration
-* End-to-end deployment and troubleshooting of the application
+Modern web applications require high availability, rapid release cycles, and resilience against regional or cloud-provider failures. A monolithic application deployed to a single cloud provider cannot meet these strict enterprise requirements. 
 
-## Repository Structure
+**The Goal:** Modernize a microservices-based e-commerce application by migrating it to a highly scalable, multi-cloud architecture (AWS and Azure) while implementing fully automated, secure, and observable **DevSecOps** pipelines.
 
-```text
-boutique-capstone-project/
-├── .github/
-│   └── workflows/
-├── gitops/
-│   ├── k8s/
-│   ├── argo-cd.yml
-│   ├── kustomization.yml
-│   ├── namespace.yml
-│   └── secrets.yml
-└── projects/
-    ├── boutique-microservices/
-    ├── Infrastructure/
-    ├── Issues.md
-    └── README.md
+---
+
+## 🏗️ High-Level Project Overview
+
+This project simulates a real-world enterprise infrastructure migration and CI/CD modernization effort. 
+
+1. **Microservices Architecture:** The application consists of multiple discrete services (React Frontend, Node.js API Gateway, Auth, Orders, Products, Users) backed by a PostgreSQL database.
+2. **Multi-Cloud Infrastructure-as-Code:** Infrastructure is provisioned simultaneously in both AWS and Azure using modular **Terraform** deployments.
+3. **DevSecOps CI/CD Pipelines:** Automated pipelines (GitHub Actions & Azure DevOps) build, test, and scan code using **SonarQube** and **Trivy** before packaging them into Docker containers.
+4. **GitOps Deployment:** **ArgoCD** continuously monitors the repository and synchronizes the Kubernetes clusters (EKS & AKS) to the desired state defined by **Kustomize** manifests.
+5. **Observability:** Centralized monitoring via **Prometheus** and **Grafana** alongside centralized logging ensures immediate visibility into system health.
+
+---
+
+## ⚙️ Tech Stack & DevSecOps Tools
+
+| Category | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Frontend** | React | User Interface |
+| **Backend** | Node.js / Express | Microservices API |
+| **Database** | PostgreSQL | Relational Database (RDS / Flexible Server) |
+| **Containerization**| Docker | Application packaging |
+| **Orchestration** | Kubernetes (EKS / AKS) | Container scaling and management |
+| **Infrastructure** | Terraform | Immutable Infrastructure as Code |
+| **Config Management**| Ansible | Server configuration (SonarQube VM) |
+| **CI/CD** | GitHub Actions / Azure DevOps| Build and push pipelines |
+| **Security (Sec)** | SonarQube, Trivy | Static Code Analysis, Container Vulnerability Scanning |
+| **GitOps** | ArgoCD, Kustomize | Continuous Deployment and drift remediation |
+| **Ingress/Routing** | AWS ALB / Azure AGIC | Layer 7 Application Load Balancing |
+| **Observability** | Prometheus, Grafana | Metrics collection and visual dashboards |
+| **Secrets Management**| AWS Secrets Manager / Azure Key Vault | External Secret Stores for Kubernetes |
+
+---
+
+## 🔄 CI/CD & GitOps Flow Architecture
+
+Below is a visualization of how code moves from a developer's machine into production across multiple clouds securely.
+
+```mermaid
+graph TD
+    %% Developer Actions
+    Dev([Developer]) -->|git push| Repo[(Source Code Repo)]
+    
+    %% CI Pipeline
+    subgraph "Continuous Integration (CI) - DevSecOps"
+        Repo --> Pipeline[GitHub Actions / Azure DevOps]
+        Pipeline --> Sonar[SonarQube: Code Quality & Security]
+        Pipeline --> Build[Docker Build]
+        Build --> Trivy[Trivy: Image Vulnerability Scan]
+        Trivy --> Push[Push Image]
+    end
+    
+    %% Artifacts
+    Push --> ECR[(AWS ECR)]
+    Push --> ACR[(Azure ACR)]
+    
+    %% GitOps Update
+    Push -->|Pipeline updates tag| GitOpsRepo[(GitOps Repo: Kustomize)]
+    
+    %% Continuous Deployment (CD)
+    subgraph "Continuous Deployment (CD) - GitOps"
+        ArgoAWS[ArgoCD on AWS EKS] -.->|Polls for Changes| GitOpsRepo
+        ArgoAzure[ArgoCD on Azure AKS] -.->|Polls for Changes| GitOpsRepo
+    end
+    
+    %% Infrastructure
+    subgraph "AWS Infrastructure"
+        ArgoAWS -->|Syncs| EKS[AWS EKS Cluster]
+        EKS --> ALB[Application Load Balancer]
+        EKS -.-> SecretsManager[AWS Secrets Manager]
+    end
+    
+    subgraph "Azure Infrastructure"
+        ArgoAzure -->|Syncs| AKS[Azure AKS Cluster]
+        AKS --> AGIC[App Gateway Ingress]
+        AKS -.-> KeyVault[Azure Key Vault]
+    end
+    
+    %% Traffic
+    User([End User]) --> ALB
+    User([End User]) --> AGIC
 ```
 
-## Tech Stack
+---
 
-| Category           | Technology                 |
-| ------------------ | -------------------------- |
-| Frontend           | React                      |
-| Backend            | Node.js                    |
-| Database           | PostgreSQL                 |
-| Containers         | Docker, Docker Compose     |
-| Orchestration      | Kubernetes, AWS EKS        |
-| Infrastructure     | Terraform                  |
-| CI/CD              | GitHub Actions             |
-| GitOps             | ArgoCD, Kustomize          |
-| Monitoring         | Prometheus, Grafana        |
-| Logging            | AWS Fluent Bit, CloudWatch |
-| Container Registry | Amazon ECR                 |
-| Cloud              | AWS                        |
+## 📁 Internal Documentation
 
-## Simulating Traffic and Monitoring
+For deeper technical dives into specific components of this project, please refer to the internal READMEs:
 
-If you are using the `simulate-traffic.sh` script to test metrics in Grafana, ensure you point the URL to the API Gateway to properly trigger API metrics:
-
-```bash
-# Example URL in simulate-traffic.sh
-URL="http://<your-ingress-url>/api/products"
-```
-If you send traffic to the root (`/`), it will hit the React frontend and not register on the backend API Grafana dashboards.
-
-**Grafana Dashboard Enhancements**
-The provided Grafana dashboard (`gitops/base/k8s/grafana-dashboard.yml`) includes panels to track the total requests to the gateway.
-To track request breakdowns by microservice, PromQL queries like these are included:
-- `sum by (route) (http_requests_total{service_name="gateway"})` (Breakdown of all API routes)
-- `sum(http_requests_total{service_name="gateway", route=~"^/api/auth.*"})` (Auth requests only)
+1. **[Infrastructure Configuration Guide](projects/Infrastructure/README.md):** Details the Terraform state management, modular design, and Ansible integrations for both AWS and Azure.
+2. **[GitOps & Kubernetes Strategy](gitops/README.md):** Explains the Kustomize overlay strategy for separating environments (`dev` vs `prod`) and clouds (`aws` vs `azure`).
