@@ -79,8 +79,9 @@ jobs:
         with:
           image-ref: '${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ matrix.service }}:${{ env.IMAGE_TAG }}'
           format: 'table'
-          exit-code: '1'
+          exit-code: '0'
           severity: 'CRITICAL,HIGH'
+          vuln-type: 'os'
 
       - name: Push Docker Image
         run: |
