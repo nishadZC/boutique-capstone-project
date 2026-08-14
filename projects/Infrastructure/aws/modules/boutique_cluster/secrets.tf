@@ -1,6 +1,6 @@
 # Create the secret in AWS Secrets Manager
 resource "aws_secretsmanager_secret" "db_password" {
-  name        = "${var.cluster_name}-db-password"
+  name        = "${var.cluster_name}-db-secret-v2"
   description = "Database password for boutique environment"
 }
 
