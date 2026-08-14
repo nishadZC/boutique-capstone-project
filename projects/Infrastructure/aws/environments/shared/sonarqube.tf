@@ -58,7 +58,7 @@ resource "aws_instance" "sonarqube" {
   subnet_id     = data.aws_subnets.dev.ids[0]
   vpc_security_group_ids = [aws_security_group.sonarqube.id]
 
-  user_data = templatefile("${path.module}/sonarqube-setup.sh", {})
+  user_data = replace(file("${path.module}/sonarqube-setup.sh"), "\r", "")
 
   tags = {
     Name = "SonarQube-Server"
