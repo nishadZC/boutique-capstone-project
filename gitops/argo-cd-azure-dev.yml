@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: boutique-azure-dev
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/nishadZC/boutique-capstone-project'
+    targetRevision: main
+    path: gitops/azure/overlays/dev
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: boutique-azure-dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
