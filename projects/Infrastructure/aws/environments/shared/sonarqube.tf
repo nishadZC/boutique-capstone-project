@@ -58,7 +58,7 @@ resource "aws_instance" "sonarqube" {
   subnet_id     = data.aws_subnets.dev.ids[0]
   vpc_security_group_ids = [aws_security_group.sonarqube.id]
 
-  user_data = <<EOF
+  user_data = replace(<<EOF
 #!/bin/bash
 
 # Update and install dependencies
@@ -119,6 +119,7 @@ systemctl daemon-reload
 systemctl enable sonarqube
 systemctl start sonarqube
 EOF
+  , "\r", "")
 
   tags = {
     Name = "SonarQube-Server"
