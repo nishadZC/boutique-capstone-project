@@ -60,6 +60,7 @@ resource "aws_instance" "sonarqube" {
 
   user_data = replace(<<EOF
 #!/bin/bash
+# Trigger Terraform Cloud Replacement - V2
 
 # Update and install dependencies
 # Ubuntu often runs unattended-upgrades on boot which locks apt. This loop waits for it to finish.
