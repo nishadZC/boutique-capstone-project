@@ -26,6 +26,12 @@ export const httpRequestsInProgress = new Gauge({
   registers: [register],
 });
 
+export const boutiqueTotalUsers = new Gauge({
+  name: 'boutique_total_users',
+  help: 'Total number of registered users in the database',
+  registers: [register],
+});
+
 export const serviceInfo = new Gauge({
   name: 'service_info',
   help: 'Static information about service',
