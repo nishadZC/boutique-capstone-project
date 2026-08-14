@@ -62,8 +62,9 @@ resource "aws_instance" "sonarqube" {
               #!/bin/bash
               
               # Update and install dependencies
-              apt-get update -y
-              apt-get install -y openjdk-17-jdk wget unzip acl postgresql postgresql-contrib
+              # Ubuntu often runs unattended-upgrades on boot which locks apt. This loop waits for it to finish.
+              until apt-get update -y; do sleep 5; done
+              until DEBIAN_FRONTEND=noninteractive apt-get install -y openjdk-17-jdk wget unzip acl postgresql postgresql-contrib; do sleep 5; done
               
               # Configure PostgreSQL
               sudo -u postgres psql -c "CREATE USER sonar WITH ENCRYPTED PASSWORD 'sonarpassword';"
