@@ -20,7 +20,7 @@ resource "azurerm_postgresql_flexible_server" "postgres" {
   administrator_login    = var.admin_username
   administrator_password = var.admin_password
   storage_mb             = 32768
-  sku_name               = "Standard_D2ads_v5"
+  sku_name               = "GP_Standard_D2ads_v5"
   
   depends_on = [azurerm_private_dns_zone_virtual_network_link.postgres]
 }
