@@ -1,0 +1,92 @@
+trigger:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - projects/Infrastructure/*
+
+variables:
+  # IMPORTANT: Update this to match the exact name of the Service Connection you created in Azure DevOps
+  azureServiceConnection: 'Azure Resource Manager'
+  tfstateResourceGroup: 'tfstate-rg'
+  tfstateStorageAccount: 'boutiquetfstate2026'
+  tfstateContainer: 'tfstate'
+
+stages:
+- stage: DeployShared
+  displayName: 'Deploy Shared Infrastructure'
+  jobs:
+  - job: TerraformShared
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: Bash@3
+      displayName: 'Install Terraform'
+      inputs:
+        targetType: 'inline'
+        script: |
+          wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+          echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+          sudo apt update && sudo apt install terraform
+
+    - task: AzureCLI@2
+      displayName: 'Terraform Init & Apply (Shared)'
+      inputs:
+        azureSubscription: '$(azureServiceConnection)'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          # The AzureCLI task automatically logs in. We need to export these environment variables 
+          # so Terraform can use the same authentication context.
+          export ARM_CLIENT_ID=$servicePrincipalId
+          export ARM_CLIENT_SECRET=$servicePrincipalKey
+          export ARM_TENANT_ID=$tenantId
+          export ARM_SUBSCRIPTION_ID=$(az account show --query id -o tsv)
+
+          cd projects/Infrastructure/azure/environments/shared
+          
+          echo "Initializing Terraform..."
+          terraform init
+          
+          echo "Applying Terraform..."
+          terraform apply -auto-approve
+        addSpnToEnvironment: true
+
+- stage: DeployDev
+  displayName: 'Deploy Dev Infrastructure (AKS)'
+  dependsOn: DeployShared
+  jobs:
+  - job: TerraformDev
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: Bash@3
+      displayName: 'Install Terraform'
+      inputs:
+        targetType: 'inline'
+        script: |
+          wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+          echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+          sudo apt update && sudo apt install terraform
+
+    - task: AzureCLI@2
+      displayName: 'Terraform Init & Apply (Dev)'
+      inputs:
+        azureSubscription: '$(azureServiceConnection)'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          export ARM_CLIENT_ID=$servicePrincipalId
+          export ARM_CLIENT_SECRET=$servicePrincipalKey
+          export ARM_TENANT_ID=$tenantId
+          export ARM_SUBSCRIPTION_ID=$(az account show --query id -o tsv)
+
+          cd projects/Infrastructure/azure/environments/dev
+          
+          echo "Initializing Terraform..."
+          terraform init
+          
+          echo "Applying Terraform..."
+          terraform apply -auto-approve
+        addSpnToEnvironment: true
