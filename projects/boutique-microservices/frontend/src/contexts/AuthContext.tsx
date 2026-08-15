@@ -65,7 +65,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           dispatch({ type: 'LOGIN_FAILURE', payload: 'Session expired' });
         }
       } else {
-        dispatch({ type: 'LOGIN_SUCCESS', payload: null as any });
+        dispatch({ type: 'LOGOUT' });
       }
     };
 

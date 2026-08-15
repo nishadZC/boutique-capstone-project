@@ -84,6 +84,7 @@ const Home: React.FC = () => {
                       fontWeight: 700,
                       mb: 3,
                       fontSize: { xs: '2.5rem', md: '3.5rem' },
+                      color: 'white',
                     }}
                   >
                     Discover Timeless
@@ -99,6 +100,7 @@ const Home: React.FC = () => {
                       lineHeight: 1.6,
                       fontWeight: 300,
                       opacity: 0.9,
+                      color: 'white',
                     }}
                   >
                     Indulge in our curated collection of luxury products, 

@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useReducer, ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthContext';
 import { Product } from '../types';
 
 interface CartItem extends Product {
@@ -130,12 +132,22 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, initialState);
+  const navigate = useNavigate();
+  const { isAuthenticated, user } = useAuth();
 
   React.useEffect(() => {
     localStorage.setItem('boutique_cart', JSON.stringify(state));
   }, [state]);
 
   const addItem = (product: Product) => {
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+    if (user && (!user.phone || !user.address)) {
+      navigate('/profile');
+      return;
+    }
     dispatch({ type: 'ADD_ITEM', payload: product });
   };
 
