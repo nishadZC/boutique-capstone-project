@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: auth
-          image: 368763425814.dkr.ecr.us-east-1.amazonaws.com/auth:e512498fbee8a57e711edf504bb4d0059ae0ece0
+          image: boutiqueacrshared.azurecr.io/auth:latest
           ports:
             - containerPort: 3002
           env:

@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: order-service
-          image: 368763425814.dkr.ecr.us-east-1.amazonaws.com/order-service:e512498fbee8a57e711edf504bb4d0059ae0ece0
+          image: boutiqueacrshared.azurecr.io/order-service:latest
           ports:
             - containerPort: 3004
           env:
