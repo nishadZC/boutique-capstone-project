@@ -1,9 +1,9 @@
 variable "location" {
   type    = string
-  default = "East US"
+  default = "Canada Central"
   validation {
-    condition     = contains(["East US", "West US", "North Europe", "West Europe"], var.location)
-    error_message = "The location must be one of: East US, West US, North Europe, West Europe."
+    condition     = contains(["Canada Central", "East US", "West US", "North Europe", "West Europe"], var.location)
+    error_message = "The location must be one of: Canada Central, East US, West US, North Europe, West Europe."
   }
 }
 

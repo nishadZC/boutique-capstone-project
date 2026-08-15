@@ -52,6 +52,8 @@ stages:
           terraform validate
           terraform plan -out=$(Build.ArtifactStagingDirectory)/dev-tfplan
         addSpnToEnvironment: true
+      env:
+        TF_VAR_db_password: $(TF_VAR_db_password)
 
     - task: PublishPipelineArtifact@1
       displayName: 'Publish Dev Plan'
@@ -106,6 +108,8 @@ stages:
                 terraform init
                 terraform apply -auto-approve $(Build.ArtifactStagingDirectory)/dev-tfplan
               addSpnToEnvironment: true
+            env:
+              TF_VAR_db_password: $(TF_VAR_db_password)
 
 # ==========================================
 # SHARED ENVIRONMENT
