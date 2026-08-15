@@ -62,13 +62,13 @@ resource "helm_release" "monitoring" {
     yamlencode({
       grafana = {
         service = {
-          type = "ClusterIP"
+          type = "LoadBalancer"
         }
       }
 
       prometheus = {
         service = {
-          type = "ClusterIP"
+          type = "LoadBalancer"
         }
       }
 
@@ -98,7 +98,7 @@ resource "helm_release" "monitoring" {
           ]
         }
         service = {
-          type = "ClusterIP"
+          type = "LoadBalancer"
         }
       }
     })
