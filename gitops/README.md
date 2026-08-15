@@ -1,6 +1,6 @@
 # GitOps Deployment Strategy
 
-This directory serves as the Single Source of Truth for the state of all Kubernetes clusters in this project. We utilize **ArgoCD** as our GitOps controller and **Kustomize** to manage manifests across multiple environments and clouds.
+This directory serves as the Single Source of Truth for the state of all Kubernetes clusters in this project. We utilize **ArgoCD** as our GitOps controller and **Kustomize** to manage manifests across multiple environments .
 
 ## Directory Layout
 

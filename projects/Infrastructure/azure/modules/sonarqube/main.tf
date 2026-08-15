@@ -80,4 +80,6 @@ resource "azurerm_linux_virtual_machine" "sonar" {
     sku       = "22_04-lts"
     version   = "latest"
   }
+
+  custom_data = filebase64("${path.module}/setup.sh")
 }

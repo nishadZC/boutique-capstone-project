@@ -1,6 +1,6 @@
 # Boutique Microservices — Deployment Guide
 
-This guide walks through the full deployment of the boutique e-commerce application — from running it locally with Docker, to provisioning AWS infrastructure with Terraform, to running it on Kubernetes with a full CI/CD pipeline, GitOps, and observability stack.
+This guide walks through the full deployment of the boutique e-commerce application � from running it locally with Docker, to provisioning infrastructure with Terraform, to running it on Kubernetes with a full CI/CD pipeline, GitOps, and observability stack.
 
 ---
 
@@ -8,7 +8,6 @@ This guide walks through the full deployment of the boutique e-commerce applicat
 
 1. [Architecture Overview](#architecture-overview)
 2. [Local Development with Docker](#local-development-with-docker)
-3. [Infrastructure Provisioning on AWS](#infrastructure-provisioning-on-aws)
 4. [From Docker to Kubernetes](#from-docker-to-kubernetes)
 5. [Setting Up the CI/CD Pipeline](#setting-up-the-cicd-pipeline)
 6. [Setting Up ArgoCD (GitOps)](#setting-up-argocd-gitops)
@@ -148,63 +147,6 @@ npm run dev:frontend  # React frontend only
 
 ---
 
-## Infrastructure Provisioning on AWS
-
-The Terraform configuration in `projects/Infrastructure/` provisions everything needed to run the application on EKS.
-
-### What Terraform creates
-
-| Resource | Details |
-|----------|---------|
-| VPC | 3 public subnets across us-east-1a/b/c |
-| EKS Cluster | `eks-cluster`, Kubernetes 1.34 |
-| Node Group | `m7i-flex.large`, 1–2 nodes, on-demand |
-| ECR Repositories | One per service (7 total) |
-| ArgoCD | Installed via Helm into `argocd` namespace |
-| Prometheus + Grafana | Installed via `kube-prometheus-stack` Helm chart into `monitoring` namespace |
-
-### Prerequisites
-
-- [Terraform](https://developer.hashicorp.com/terraform/install) ≥ 1.5
-- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html) configured
-
-```bash
-aws configure
-# Enter: Access Key ID, Secret Access Key, region (us-east-1), output format (json)
-```
-
-Verify:
-```bash
-aws sts get-caller-identity
-```
-
-### Apply infrastructure
-
-```bash
-cd projects/Infrastructure
-terraform init
-terraform plan        # review what will be created
-terraform apply --auto-approve
-```
-
-This takes ~15 minutes. Terraform outputs the cluster name and ECR URLs when done.
-
-### Connect kubectl to the cluster
-
-```bash
-aws eks update-kubeconfig \
-  --region us-east-1 \
-  --name boutique-eks
-```
-
-Verify nodes are ready:
-
-```bash
-kubectl get nodes
-```
-
----
-
 ## From Docker to Kubernetes
 
 Each service has a `Dockerfile` in its directory under `projects/boutique-microservices/`. When deployed to Kubernetes, these become container images stored in ECR, referenced by the manifests in `gitops/k8s/`.
@@ -213,7 +155,7 @@ Each service has a `Dockerfile` in its directory under `projects/boutique-micros
 
 | Docker Compose concept | Kubernetes equivalent |
 |------------------------|----------------------|
-| `image:` in docker-compose.yml | ECR image URI in deployment manifest |
+| `image:` in docker-compose.yml | ACR image URI in deployment manifest |
 | `ports:` | `containerPort` + `Service` resource |
 | `environment:` | `env:` or `secretKeyRef` in pod spec |
 | `depends_on:` | Kubernetes starts all pods; services retry until DB is ready |
@@ -279,85 +221,6 @@ kubectl logs -n boutique -l job-name=boutique-db-restore
 ```
 
 You should see SQL being executed across all 4 databases. `Completed` status means it ran successfully — this is expected and normal.
-
----
-
-## Setting Up the CI/CD Pipeline
-
-The GitHub Actions pipeline (`.github/workflows/ci.yml`) automatically builds Docker images and pushes them to ECR on every push to `main`. It then updates the image tags in the k8s manifests so ArgoCD can sync the new version.
-
-### Pipeline jobs
-
-```
-push to main
-     │
-     ▼
-build-and-push (7 parallel jobs)
-  └── For each service: docker build → docker push to ECR
-     │
-     ▼
-update-manifests
-  └── Updates image tags in gitops/k8s/
-  └── Commits back to main
-```
-
-### Step 1: Create an IAM user for GitHub Actions
-
-1. Go to **AWS Console → IAM → Users → Create user**
-2. Name: `github-actions-ci`
-3. Attach managed policies:
-   - `AmazonEC2ContainerRegistryFullAccess`
-4. Go to the user → **Security credentials → Create access key**
-5. Select **Application running outside AWS**
-6. Copy both the **Access Key ID** and **Secret Access Key** (only shown once)
-
-### Step 2: Add secrets to GitHub
-
-Go to your repository → **Settings → Secrets and variables → Actions → New repository secret**
-
-| Secret Name | Value |
-|-------------|-------|
-| `AWS_ACCESS_KEY_ID` | Access key from Step 1 |
-| `AWS_SECRET_ACCESS_KEY` | Secret key from Step 1 |
-| `AWS_REGION` | `us-east-1` (or your region) |
-| `AWS_ACCOUNT_ID` | Your 12-digit AWS account ID |
-
-To find your account ID:
-```bash
-aws sts get-caller-identity --query Account --output text
-```
-
-### Step 3: Trigger the pipeline
-
-Push any change to `main`:
-
-```bash
-git add .
-git commit -m "trigger CI"
-git push origin main
-```
-
-### Step 4: Check pipeline status
-
-1. Go to your repo → **Actions** tab
-2. Click the latest **Boutique CI Pipeline** run
-3. You'll see two jobs:
-   - **build-and-push** — 7 parallel matrix jobs. Each builds and pushes one service image to ECR.
-   - **update-manifests** — runs after all builds succeed. Replaces image tags in `gitops/k8s/` and commits back.
-4. Click any job → expand any step to see full logs
-5. Green checkmark = success. Red X = failed — click the step to see the error.
-
-### Step 5: Verify images in ECR
-
-```bash
-aws ecr describe-images \
-  --repository-name frontend \
-  --region us-east-1 \
-  --query 'imageDetails[*].imageTags' \
-  --output table
-```
-
-The tag will be the commit SHA (e.g. `3e910aa...`).
 
 ---
 
@@ -568,15 +431,15 @@ The dashboard has a **Service** dropdown variable at the top — use it to filte
 Install Fluent Bit to forward pod logs to CloudWatch:
 
 ```bash
-helm repo add aws https://aws.github.io/eks-charts
+helm repo add Azure https://Azure.github.io/AKS-charts
 helm repo update
 
-helm upgrade --install aws-for-fluent-bit aws/aws-for-fluent-bit \
+helm upgrade --install Azure-for-fluent-bit Azure/Azure-for-fluent-bit \
   --namespace amazon-cloudwatch \
   --create-namespace \
   --set cloudWatch.enabled=true \
   --set cloudWatch.region=us-east-1 \
-  --set cloudWatch.logGroupName=/eks/boutique/pods \
+  --set cloudWatch.logGroupName=/AKS/boutique/pods \
   --set cloudWatch.logStreamPrefix=from-fluent-bit- \
   --set firehose.enabled=false \
   --set kinesis.enabled=false \
@@ -588,7 +451,7 @@ Verify:
 kubectl get pods -n amazon-cloudwatch
 ```
 
-Logs appear in **CloudWatch → Log groups → /eks/boutique/pods**.
+Logs appear in **CloudWatch → Log groups → /AKS/boutique/pods**.
 
 ---
 

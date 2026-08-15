@@ -1,5 +1,5 @@
 #!/bin/bash
-URL="http://k8s-ingressn-ingressn-6715fec299-81d68e11925ca2b2.elb.us-east-1.amazonaws.com/"
+URL="http://localhost:3000/"
 echo "Sending traffic to $URL to trigger HighTraffic alert..."
 echo "Press Ctrl+C to stop."
 
