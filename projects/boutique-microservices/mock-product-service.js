@@ -183,6 +183,76 @@ const mockProducts = [
     isNew: false,
     created_at: '2024-01-04T10:00:00Z',
     updated_at: '2024-01-04T10:00:00Z'
+  },
+  {
+    id: '13',
+    name: 'Rolex Submariner Watch',
+    description: 'Iconic luxury diving watch with Oystersteel bracelet and black dial.',
+    price: 9500.00,
+    image_url: '/product-images/rolex-watch.jpg',
+    category: 'accessories',
+    inventory: 3,
+    rating: 5.0,
+    reviewCount: 34,
+    isNew: true,
+    created_at: '2024-01-03T10:00:00Z',
+    updated_at: '2024-01-03T10:00:00Z'
+  },
+  {
+    id: '14',
+    name: 'Cartier Love Bracelet',
+    description: '18K Yellow Gold iconic Love bracelet with screw motif.',
+    price: 7350.00,
+    image_url: '/product-images/cartier-bracelet.jpg',
+    category: 'jewelry',
+    inventory: 5,
+    rating: 4.9,
+    reviewCount: 42,
+    isNew: false,
+    created_at: '2024-01-02T10:00:00Z',
+    updated_at: '2024-01-02T10:00:00Z'
+  },
+  {
+    id: '15',
+    name: 'Burberry Trench Coat',
+    description: 'Classic double-breasted cotton gabardine trench coat with vintage check lining.',
+    price: 2490.00,
+    image_url: '/product-images/trench-coat.jpg',
+    category: 'clothing',
+    inventory: 15,
+    rating: 4.8,
+    reviewCount: 27,
+    isNew: false,
+    created_at: '2024-01-01T10:00:00Z',
+    updated_at: '2024-01-01T10:00:00Z'
+  },
+  {
+    id: '16',
+    name: 'YSL Leather Wallet',
+    description: 'Black quilted leather wallet with gold-tone monogram hardware.',
+    price: 650.00,
+    image_url: '/product-images/leather-wallet.jpg',
+    category: 'accessories',
+    inventory: 20,
+    rating: 4.7,
+    reviewCount: 15,
+    isNew: true,
+    created_at: '2023-12-31T10:00:00Z',
+    updated_at: '2023-12-31T10:00:00Z'
+  },
+  {
+    id: '17',
+    name: 'Tom Ford Sunglasses',
+    description: 'Oversized cat-eye tortoiseshell sunglasses with gradient lenses.',
+    price: 495.00,
+    image_url: '/product-images/sunglasses.jpg',
+    category: 'accessories',
+    inventory: 25,
+    rating: 4.6,
+    reviewCount: 8,
+    isNew: false,
+    created_at: '2023-12-30T10:00:00Z',
+    updated_at: '2023-12-30T10:00:00Z'
   }
 ];
 
