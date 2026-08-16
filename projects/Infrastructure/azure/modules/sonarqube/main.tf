@@ -58,7 +58,7 @@ resource "azurerm_linux_virtual_machine" "sonar" {
   name                = var.vm_name
   resource_group_name = var.resource_group_name
   location            = var.location
-  size                = "Standard_B2s"
+  size                = "Standard_B2ps_v2"
   admin_username      = var.admin_username
   network_interface_ids = [
     azurerm_network_interface.sonar.id,
@@ -77,7 +77,7 @@ resource "azurerm_linux_virtual_machine" "sonar" {
   source_image_reference {
     publisher = "Canonical"
     offer     = "0001-com-ubuntu-server-jammy"
-    sku       = "22_04-lts"
+    sku       = "22_04-lts-arm64"
     version   = "latest"
   }
 

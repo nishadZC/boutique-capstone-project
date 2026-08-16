@@ -1,46 +1,57 @@
-# Getting Started with Create React App
+# Boutique E-Commerce Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This directory contains the user interface for the Boutique microservices application. It is built as a Single Page Application (SPA) using React and communicates directly with the backend API Gateway to fetch data and perform operations.
 
-## Available Scripts
+## 🏗️ Architecture & Tech Stack
 
-In the project directory, you can run:
+- **Framework**: React (Bootstrapped with Create React App)
+- **Routing**: React Router for client-side navigation
+- **State Management**: React Context / Hooks for managing cart state, user sessions, and product listings
+- **Styling**: Modern, responsive CSS for a premium e-commerce look and feel
+- **Containerization**: Packaged using Docker and served via NGINX in production
 
-### `npm start`
+## 🧩 Key Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+1. **Product Catalog**: Browse the luxury fashion catalog with dynamic rendering of product details, images, and prices.
+2. **Shopping Cart**: Add items to the cart, adjust quantities, and view a running total.
+3. **Checkout Flow**: Simulated checkout process handling user order placement.
+4. **User Authentication**: Login and registration screens (integrating with the Auth microservice).
+5. **Responsive Design**: Optimized for both desktop and mobile viewing.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 🚀 Local Development
 
-### `npm test`
+### Prerequisites
+- Node.js (v18+)
+- npm or yarn
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Installation
+```bash
+# Navigate to the frontend directory
+cd frontend
 
-### `npm run build`
+# Install dependencies
+npm install
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Running the App
+```bash
+# Start the development server
+npm start
+```
+This will launch the app in development mode at [http://localhost:3000](http://localhost:3000). The app expects the API Gateway to be running on its configured port (typically `:3001` or via the Kubernetes ingress) to fetch live data.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 🐳 Docker Deployment
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The frontend includes a `Dockerfile` that builds the optimized production React bundle and serves it using a lightweight NGINX web server. 
 
-### `npm run eject`
+```bash
+# Build the container
+docker build -t boutique-frontend:latest .
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+# Run the container locally
+docker run -p 3000:80 boutique-frontend:latest
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 🔌 API Integration
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+The frontend expects to communicate with the backend services via the API Gateway. In development, you may need to configure proxy rules in `package.json` or environment variables (e.g., `REACT_APP_API_URL`) to point to the correct Gateway URL.
