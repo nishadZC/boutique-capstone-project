@@ -1,5 +1,5 @@
 # Order Service Dockerfile (JavaScript service)
-FROM node:20-alpine
+FROM node:20-slim
 
 WORKDIR /app
 
@@ -11,8 +11,8 @@ RUN npm install --omit=dev && npm cache clean --force
 COPY . .
 
 # Create non-root user
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nodejs -u 1001
+RUN groupadd -r -g 1001 nodejs
+RUN useradd -r -u 1001 -g nodejs nodejs
 
 USER nodejs
 

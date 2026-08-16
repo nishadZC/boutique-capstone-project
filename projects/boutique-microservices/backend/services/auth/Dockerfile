@@ -1,5 +1,5 @@
 # Auth Service Dockerfile
-FROM node:20-alpine AS builder
+FROM node:20-slim AS builder
 
 WORKDIR /app
 
@@ -14,7 +14,7 @@ COPY . .
 RUN npm run build
 
 # Production stage
-FROM node:20-alpine
+FROM node:20-slim
 
 WORKDIR /app
 
@@ -26,8 +26,8 @@ RUN npm install --omit=dev && npm cache clean --force
 COPY --from=builder /app/dist ./dist
 
 # Create non-root group & user
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nodejs -u 1001
+RUN groupadd -r -g 1001 nodejs
+RUN useradd -r -u 1001 -g nodejs nodejs
 
 USER nodejs
 

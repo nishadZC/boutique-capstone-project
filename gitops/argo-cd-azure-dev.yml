@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/nishadZC/boutique-capstone-project'
+    repoURL: 'git@ssh.dev.azure.com:v3/makkenamqmb/Boutique%20project/Boutique%20project'
     targetRevision: main
     path: gitops/azure/overlays/dev
   destination:
