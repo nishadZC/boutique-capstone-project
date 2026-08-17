@@ -5,7 +5,7 @@ import * as dotenv from 'dotenv';
 import { userRoutes } from './routes/users';
 import { connectDB } from './database/connection';
 import { metricsMiddleware, setupMetrics } from './metrics';
-import { query } from './database/connection';
+
 
 dotenv.config({ path: './.env' });
 

@@ -37,6 +37,7 @@ export const boutiqueTotalUsers = new Gauge({
       const count = parseInt(result.rows[0].count, 10);
       this.set(count);
     } catch (err) {
+      console.error('Failed to collect boutiqueTotalUsers metric:', err);
       // On failure (e.g. before DB connects), default to 0
       this.set(0);
     }
