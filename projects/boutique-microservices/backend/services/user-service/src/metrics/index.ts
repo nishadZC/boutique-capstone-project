@@ -30,6 +30,17 @@ export const boutiqueTotalUsers = new Gauge({
   name: 'boutique_total_users',
   help: 'Total number of registered users in the database',
   registers: [register],
+  async collect() {
+    try {
+      const { query } = require('../database/connection');
+      const result = await query('SELECT COUNT(*) FROM users');
+      const count = parseInt(result.rows[0].count, 10);
+      this.set(count);
+    } catch (err) {
+      // On failure (e.g. before DB connects), default to 0
+      this.set(0);
+    }
+  }
 });
 
 export const serviceInfo = new Gauge({

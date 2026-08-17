@@ -4,7 +4,7 @@ import helmet from 'helmet';
 import * as dotenv from 'dotenv';
 import { userRoutes } from './routes/users';
 import { connectDB } from './database/connection';
-import { metricsMiddleware, setupMetrics, boutiqueTotalUsers } from './metrics';
+import { metricsMiddleware, setupMetrics } from './metrics';
 import { query } from './database/connection';
 
 dotenv.config({ path: './.env' });
@@ -31,25 +31,7 @@ const startServer = async () => {
   try {
     await connectDB();
     
-    // Poll the database every 60 seconds to update the total users metric
-    setInterval(async () => {
-      try {
-        const result = await query('SELECT COUNT(*) FROM users');
-        const count = parseInt(result.rows[0].count, 10);
-        boutiqueTotalUsers.set(count);
-      } catch (err) {
-        console.error('Failed to poll total users metric:', err);
-      }
-    }, 60000);
-    
-    // Run an initial poll immediately
-    try {
-      const result = await query('SELECT COUNT(*) FROM users');
-      const count = parseInt(result.rows[0].count, 10);
-      boutiqueTotalUsers.set(count);
-    } catch (err) {
-      console.error('Failed to run initial metric poll:', err);
-    }
+    // The total users metric is now collected dynamically by prom-client
 
     app.listen(PORT, () => {
       console.log(`User service running on port ${PORT}`);

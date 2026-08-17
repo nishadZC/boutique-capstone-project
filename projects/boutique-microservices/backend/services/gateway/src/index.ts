@@ -48,6 +48,10 @@ app.use('/api/users', createProxyMiddleware({
   pathRewrite: { '^/api/users': '' },
 }));
 
+app.get('/', (req, res) => {
+  res.status(200).send('API Gateway is running');
+});
+
 app.use((req, res) => {
   res.status(404).json({ error: 'Service not found' });
 });
