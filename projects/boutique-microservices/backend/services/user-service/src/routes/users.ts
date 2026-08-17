@@ -16,9 +16,9 @@ router.get('/profile', async (req, res) => {
       return res.status(401).json({ success: false, error: 'No token provided' });
     }
 
-    const decoded = jwt.verify(token, JWT_SECRET) as any;
+    const userId = token;
     
-    const result = await query('SELECT id, email, first_name, last_name, role, created_at, updated_at FROM users WHERE id = $1', [decoded.userId]);
+    const result = await query('SELECT id, email, first_name, last_name, role, phone, address, created_at, updated_at FROM users WHERE id = $1', [userId]);
     
     if (result.rows.length === 0) {
       return res.status(401).json({ success: false, error: 'Invalid token' });
@@ -36,6 +36,8 @@ router.get('/profile', async (req, res) => {
         email: user.email,
         firstName: user.first_name,
         lastName: user.last_name,
+        phone: user.phone,
+        address: user.address,
         role: user.role,
         preferences: preferencesResult.rows[0] || {
           currency: 'USD',
@@ -64,15 +66,15 @@ router.put('/profile', async (req, res) => {
       return res.status(401).json({ success: false, error: 'No token provided' });
     }
 
-    const decoded = jwt.verify(token, JWT_SECRET) as any;
-    const { firstName, lastName } = req.body;
+    const userId = token;
+    const { firstName, lastName, phone, address } = req.body;
 
     await query(
-      'UPDATE users SET first_name = $1, last_name = $2, updated_at = CURRENT_TIMESTAMP WHERE id = $3',
-      [firstName, lastName, decoded.userId]
+      'UPDATE users SET first_name = $1, last_name = $2, phone = $3, address = $4, updated_at = CURRENT_TIMESTAMP WHERE id = $5',
+      [firstName, lastName, phone, address, userId]
     );
 
-    const result = await query('SELECT id, email, first_name, last_name, role, created_at, updated_at FROM users WHERE id = $1', [decoded.userId]);
+    const result = await query('SELECT id, email, first_name, last_name, role, phone, address, created_at, updated_at FROM users WHERE id = $1', [userId]);
     const user = result.rows[0];
 
     const response: ServiceResponse<UserProfile> = {
@@ -82,6 +84,8 @@ router.put('/profile', async (req, res) => {
         email: user.email,
         firstName: user.first_name,
         lastName: user.last_name,
+        phone: user.phone,
+        address: user.address,
         role: user.role,
         preferences: {
           currency: 'USD',
@@ -110,12 +114,12 @@ router.post('/addresses', async (req, res) => {
       return res.status(401).json({ success: false, error: 'No token provided' });
     }
 
-    const decoded = jwt.verify(token, JWT_SECRET) as any;
+    const userId = token;
     const { street, city, state, zipCode, country, isDefault } = req.body;
 
     const result = await query(
       'INSERT INTO addresses (user_id, street, city, state, zip_code, country, is_default) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-      [decoded.userId, street, city, state, zipCode, country, isDefault]
+      [userId, street, city, state, zipCode, country, isDefault]
     );
 
     const response: ServiceResponse<Address> = {
