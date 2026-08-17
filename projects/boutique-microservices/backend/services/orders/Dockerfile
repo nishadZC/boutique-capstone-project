@@ -16,6 +16,9 @@ RUN npm run build
 # Production stage
 FROM node:20-alpine
 
+# Patch OS vulnerabilities
+RUN apk update && apk upgrade --no-cache
+
 WORKDIR /app
 
 # Copy package files and install production dependencies only

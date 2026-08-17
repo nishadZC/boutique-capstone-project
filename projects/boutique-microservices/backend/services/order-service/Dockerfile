@@ -1,6 +1,9 @@
 # Order Service Dockerfile (JavaScript service)
 FROM node:20-alpine
 
+# Patch OS vulnerabilities
+RUN apk update && apk upgrade --no-cache
+
 WORKDIR /app
 
 # Copy package files
