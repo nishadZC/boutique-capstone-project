@@ -1,0 +1,15 @@
+replicaCount: 1
+
+image:
+  repository: boutiqueacrshared.azurecr.io/product-service
+  tag: "latest"
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 3003
+
+env: []
+# Example:
+# - name: NODE_ENV
+#   value: development

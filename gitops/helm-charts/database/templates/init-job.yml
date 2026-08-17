@@ -1,0 +1,48 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: postgres-init-job
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  template:
+    spec:
+      containers:
+      - name: init-db
+        image: postgres:15
+        env:
+        - name: PGHOST
+          valueFrom:
+            secretKeyRef:
+              name: boutique-secrets
+              key: POSTGRES_HOST
+        - name: PGUSER
+          valueFrom:
+            secretKeyRef:
+              name: boutique-secrets
+              key: POSTGRES_USER
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: boutique-secrets
+              key: POSTGRES_PASSWORD
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          echo "Waiting for database connection to $PGHOST..."
+          until pg_isready -h $PGHOST -U $PGUSER; do sleep 2; done
+          echo "Initializing schemas and seeding data..."
+          psql -h $PGHOST -U $PGUSER -d postgres -f /scripts/10-create-databases.sql
+          psql -h $PGHOST -U $PGUSER -d postgres -f /scripts/20-init-schema.sql
+          psql -h $PGHOST -U $PGUSER -d postgres -f /scripts/30-seed-data.sql
+          echo "Database initialization completed successfully!"
+        volumeMounts:
+        - name: init-scripts
+          mountPath: /scripts
+      restartPolicy: OnFailure
+      volumes:
+      - name: init-scripts
+        configMap:
+          name: postgres-init-scripts

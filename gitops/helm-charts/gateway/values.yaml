@@ -1,0 +1,15 @@
+replicaCount: 1
+
+image:
+  repository: boutiqueacrshared.azurecr.io/gateway
+  tag: "latest"
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 80
+
+env: []
+# Example:
+# - name: NODE_ENV
+#   value: development
