@@ -24,12 +24,12 @@ export const authService = {
   },
 
   getCurrentUser: async (): Promise<User> => {
-    const response = await apiClient.get('/auth/me');
-    return response.data;
+    const response = await apiClient.get('/users/profile');
+    return response.data.data;
   },
 
   updateProfile: async (data: { firstName: string; lastName: string; phone?: string; address?: string }): Promise<User> => {
-    const response = await apiClient.put('/auth/profile', data);
-    return response.data;
+    const response = await apiClient.put('/users/profile', data);
+    return response.data.data;
   },
 };
