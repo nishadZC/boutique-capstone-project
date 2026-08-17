@@ -235,15 +235,16 @@ Shipping Address: ${(order.shippingAddress as any)?.address || (typeof order.shi
                         <List>
                           {order.items.map((item, index) => (
                             <Box key={item.id}>
-                              <ListItem sx={{ px: 0 }}>
-                                <ListItemIcon>
+                              <ListItem sx={{ px: 0, py: 2 }}>
+                                <ListItemIcon sx={{ mr: 3, minWidth: 'auto' }}>
                                   <CardMedia
                                     component="img"
                                     sx={{
-                                      width: 60,
-                                      height: 60,
-                                      borderRadius: 1,
+                                      width: 80,
+                                      height: 80,
+                                      borderRadius: 2,
                                       objectFit: 'cover',
+                                      boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
                                     }}
                                     image={item.product.imageUrl}
                                     alt={item.product.name}

@@ -389,8 +389,13 @@ const Register: React.FC = () => {
                   color="secondary"
                   disabled={loading || !formData.agreeToTerms}
                   sx={{
+                    background: '#d4af37',
+                    color: '#1a1a1a',
                     px: 4,
                     py: 1.5,
+                    '&:hover': {
+                      background: '#b8941f',
+                    },
                   }}
                 >
                   {loading ? 'Creating Account...' : 'Create Account'}

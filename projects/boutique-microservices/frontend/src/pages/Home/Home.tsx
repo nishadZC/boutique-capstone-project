@@ -113,12 +113,12 @@ const Home: React.FC = () => {
                       endIcon={<ShoppingBagIcon />}
                       href="/products"
                       sx={{
-                        backgroundColor: '#d4af37',
+                        background: '#d4af37',
                         color: '#1a1a1a',
                         px: 4,
                         py: 1.5,
                         '&:hover': {
-                          backgroundColor: '#b8941f',
+                          background: '#b8941f',
                         },
                       }}
                     >
