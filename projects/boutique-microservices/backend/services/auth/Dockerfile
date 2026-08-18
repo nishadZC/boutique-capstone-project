@@ -19,9 +19,6 @@ FROM node:20-alpine
 # Patch OS vulnerabilities
 RUN apk update && apk upgrade --no-cache
 
-# Patch OS vulnerabilities
-RUN apk update && apk upgrade --no-cache
-
 WORKDIR /app
 
 # Copy package files and install production dependencies only and clean npm cache
@@ -34,9 +31,3 @@ COPY --from=builder /app/dist ./dist
 # Create non-root group & user
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nodejs -u 1001
-
-USER nodejs
-
-EXPOSE 3002
-
-CMD ["node", "dist/index.js"]
