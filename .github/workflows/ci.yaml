@@ -10,11 +10,27 @@ env:
 jobs:
   sonar-scan:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service:
+          - auth
+          - gateway
+          - orders
+          - product-service
+          - frontend
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Set Build Path
+        run: |
+          if [ "${{ matrix.service }}" == "frontend" ]; then
+            echo "BUILD_PATH=projects/boutique-microservices/frontend" >> $GITHUB_ENV
+          else
+            echo "BUILD_PATH=projects/boutique-microservices/backend/services/${{ matrix.service }}" >> $GITHUB_ENV
+          fi
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v4
@@ -23,8 +39,8 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         with:
           args: >
-            -Dsonar.projectKey=boutique-capstone-project
-            -Dsonar.sources=projects/boutique-microservices
+            -Dsonar.projectKey=boutique-${{ matrix.service }}
+            -Dsonar.sources=${{ env.BUILD_PATH }}
 
   build-and-push:
     runs-on: ubuntu-latest
@@ -36,9 +52,7 @@ jobs:
           - auth
           - gateway
           - orders
-          - order-service
           - product-service
-          - user-service
           - frontend
 
     steps:
@@ -107,7 +121,7 @@ jobs:
           ACCOUNT=${{ secrets.AWS_ACCOUNT_ID }}
           REGION=${{ secrets.AWS_REGION }}
 
-          for SERVICE in auth gateway orders order-service product-service user-service; do
+          for SERVICE in auth gateway orders product-service; do
             MANIFEST="gitops/base/k8s/backend/${SERVICE}.yml"
             sed -i "s|${ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${SERVICE}:.*|${ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${SERVICE}:${NEW_TAG}|g" $MANIFEST
           done
