@@ -19,14 +19,6 @@ scrape_configs:
     static_configs:
       - targets: ['product-service:3003']
 
-  - job_name: 'order-service'
-    static_configs:
-      - targets: ['order-service:3004']
-
   - job_name: 'orders'
     static_configs:
       - targets: ['orders:3005']
-
-  - job_name: 'user-service'
-    static_configs:
-      - targets: ['user-service:3006']

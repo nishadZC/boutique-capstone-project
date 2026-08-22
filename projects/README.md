@@ -95,7 +95,7 @@ This builds the frontend and all backend service images, and starts containers f
 docker ps
 ```
 
-You should see containers for: `frontend`, `gateway`, `auth`, `product-service`, `order-service`, `orders`, `user-service`, `postgres`, `prometheus`, `grafana`.
+You should see containers for: `frontend`, `gateway`, `auth`, `product-service`, `orders`, `postgres`, `prometheus`, `grafana`.
 
 ### Access the application
 

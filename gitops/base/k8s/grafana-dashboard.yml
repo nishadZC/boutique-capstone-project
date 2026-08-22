@@ -489,7 +489,7 @@ data:
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "nodejs_heap_size_used_bytes{job=~\"gateway|auth|product-service|order-service|orders|user-service\"}",
+              "expr": "nodejs_heap_size_used_bytes{job=~\"gateway|auth|product-service|orders\"}",
               "legendFormat": "{{job}} heap used",
               "refId": "A"
             },
@@ -498,7 +498,7 @@ data:
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "nodejs_heap_size_total_bytes{job=~\"gateway|auth|product-service|order-service|orders|user-service\"}",
+              "expr": "nodejs_heap_size_total_bytes{job=~\"gateway|auth|product-service|orders\"}",
               "legendFormat": "{{job}} heap total",
               "refId": "B"
             }
@@ -585,7 +585,7 @@ data:
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "nodejs_eventloop_lag_seconds{job=~\"gateway|auth|product-service|order-service|orders|user-service\"}",
+              "expr": "nodejs_eventloop_lag_seconds{job=~\"gateway|auth|product-service|orders\"}",
               "legendFormat": "{{job}}",
               "refId": "A"
             }
@@ -905,7 +905,7 @@ data:
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "up{job=~\"gateway|auth|product-service|order-service|orders|user-service\"}",
+              "expr": "up{job=~\"gateway|auth|product-service|orders\"}",
               "legendFormat": "{{job}}",
               "refId": "A"
             }
@@ -992,7 +992,7 @@ data:
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "sum by (job) (rate(http_requests_total{job=~\"gateway|auth|product-service|order-service|orders|user-service\", status_code=~\"5..\"}[$__rate_interval]))",
+              "expr": "sum by (job) (rate(http_requests_total{job=~\"gateway|auth|product-service|orders\", status_code=~\"5..\"}[$__rate_interval]))",
               "legendFormat": "{{job}} 5xx",
               "refId": "A"
             },
@@ -1001,7 +1001,7 @@ data:
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "sum by (job) (rate(http_requests_total{job=~\"gateway|auth|product-service|order-service|orders|user-service\", status_code=~\"4..\"}[$__rate_interval]))",
+              "expr": "sum by (job) (rate(http_requests_total{job=~\"gateway|auth|product-service|orders\", status_code=~\"4..\"}[$__rate_interval]))",
               "legendFormat": "{{job}} 4xx",
               "refId": "B"
             }

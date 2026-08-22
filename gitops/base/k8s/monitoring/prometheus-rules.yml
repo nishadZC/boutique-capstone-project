@@ -10,10 +10,13 @@ spec:
     - name: AuthAlerts
       rules:
         - alert: HighTraffic
-          expr: sum(rate(http_requests_total[1m])) > 10
+          expr: sum(rate(http_requests_total[1m])) by (route, job, namespace) > 10
           for: 1m
           labels:
             severity: warning
           annotations:
-            summary: "High Traffic Detected"
-            description: "The application is receiving more than 10 requests per second across all services."
+            summary: "High Traffic on route {{ $labels.route }} ({{ $labels.job }})"
+            description: >
+              Route '{{ $labels.route }}' in service '{{ $labels.job }}'
+              (namespace: {{ $labels.namespace }}) is receiving
+              {{ printf \"%.2f\" $value }} requests/sec, which exceeds the threshold of 10 req/s.

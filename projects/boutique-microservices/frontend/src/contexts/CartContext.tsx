@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useReducer, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
+import { useToast } from './ToastContext';
 import { Product } from '../types';
 
 interface CartItem extends Product {
@@ -134,6 +135,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [state, dispatch] = useReducer(cartReducer, initialState);
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAuth();
+  const { showToast } = useToast();
 
   React.useEffect(() => {
     localStorage.setItem('boutique_cart', JSON.stringify(state));
@@ -141,10 +143,12 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const addItem = (product: Product) => {
     if (!isAuthenticated) {
+      showToast({ message: 'Please sign in to add items to your cart.', severity: 'warning' });
       navigate('/login');
       return;
     }
     if (user && (!user.phone || !user.address)) {
+      showToast({ message: 'Please complete your profile before adding to cart.', severity: 'warning' });
       navigate('/profile');
       return;
     }

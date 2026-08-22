@@ -4,6 +4,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { AuthProvider } from './contexts/AuthContext';
 import { CartProvider } from './contexts/CartContext';
+import { ToastProvider } from './contexts/ToastContext';
 import Layout from './components/Layout/Layout';
 import Home from './pages/Home/Home';
 import Products from './pages/Products/Products';
@@ -264,6 +265,7 @@ function App() {
       <CssBaseline />
       <Router>
         <AuthProvider>
+        <ToastProvider>
           <CartProvider>
             <Routes>
               <Route path="/" element={<Layout />}>
@@ -292,7 +294,8 @@ function App() {
               </Route>
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
-          </CartProvider>
+        </CartProvider>
+      </ToastProvider>
         </AuthProvider>
       </Router>
     </ThemeProvider>
