@@ -303,7 +303,7 @@ const ProductDetail: React.FC = () => {
                         </IconButton>
                       </Box>
                       <Typography variant="body2" color="text.secondary" sx={{ ml: 2 }}>
-                        {product.inventory} available
+                        {product.inventory - quantity} available
                       </Typography>
                     </Box>
                   </>

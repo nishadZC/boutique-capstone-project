@@ -10,7 +10,8 @@ let currentUser: any = null;
 
 router.post('/register', async (req, res) => {
   try {
-    const { email, password, firstName, lastName } = req.body;
+    const { email: rawEmail, password, firstName, lastName } = req.body;
+    const email = rawEmail?.toLowerCase();
 
     const existingUser = await query('SELECT id FROM users WHERE email = $1', [email]);
     if (existingUser.rows.length > 0) {
@@ -58,7 +59,8 @@ router.post('/register', async (req, res) => {
 
 router.post('/login', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email: rawEmail, password } = req.body;
+    const email = rawEmail?.toLowerCase();
 
     // For demo mode: accept any email with password "demo"
     if (password === 'demo') {

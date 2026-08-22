@@ -187,15 +187,12 @@ services:
 
   # Frontend
   frontend:
-    image: nginx:alpine
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     container_name: boutique-frontend
-    volumes:
-      - ./frontend/build:/usr/share/nginx/html
-      - ./frontend/nginx.conf:/etc/nginx/conf.d/default.conf
     ports:
       - "3000:80"
-    environment:
-      - REACT_APP_API_URL=http://gateway:3001/api
     depends_on:
       - gateway
     networks:

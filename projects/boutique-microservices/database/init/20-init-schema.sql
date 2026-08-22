@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS categories (
 CREATE TABLE IF NOT EXISTS products (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name VARCHAR(255) NOT NULL,
-    slug VARCHAR(255),
+    slug VARCHAR(255) UNIQUE,
     description TEXT,
     short_description TEXT,
     sku VARCHAR(100),
@@ -97,6 +97,27 @@ INSERT INTO products (id, name, slug, description, short_description, sku, brand
 (gen_random_uuid(), 'Designer Heels', 'designer-heels',
 'Elegant stiletto heels in premium leather', 'Luxury high heels', 'SHOES-001', 'LUXE BOUTIQUE',
 '10000000-0000-0000-0000-000000000005', 499.00, 699.00, 18, true);
+
+-- Product images for base 5 products (1 image per product, no sharing)
+INSERT INTO product_images (product_id, image_url, alt_text, is_primary, sort_order)
+SELECT p.id, '/product-images/silk-evening-gown.jpg', p.name || ' - Main image', true, 1
+FROM products p WHERE p.sku = 'LEG-001';
+
+INSERT INTO product_images (product_id, image_url, alt_text, is_primary, sort_order)
+SELECT p.id, '/product-images/cashmere-coat.jpg', p.name || ' - Main image', true, 1
+FROM products p WHERE p.sku = 'COAT-001';
+
+INSERT INTO product_images (product_id, image_url, alt_text, is_primary, sort_order)
+SELECT p.id, '/product-images/leather-handbag.jpg', p.name || ' - Main image', true, 1
+FROM products p WHERE p.sku = 'BAG-001';
+
+INSERT INTO product_images (product_id, image_url, alt_text, is_primary, sort_order)
+SELECT p.id, '/product-images/diamond-necklace.jpg', p.name || ' - Main image', true, 1
+FROM products p WHERE p.sku = 'JWL-001';
+
+INSERT INTO product_images (product_id, image_url, alt_text, is_primary, sort_order)
+SELECT p.id, '/product-images/designer-heels.jpg', p.name || ' - Main image', true, 1
+FROM products p WHERE p.sku = 'SHOES-001';
 
 -- ============================================================
 -- ORDERS DB

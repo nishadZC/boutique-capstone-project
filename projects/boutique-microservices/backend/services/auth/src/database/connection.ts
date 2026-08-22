@@ -2,36 +2,37 @@ import { Pool } from 'pg';
 
 let pool: Pool;
 
-export const connectDB = async (): Promise<void> => {
-  try {
-    // Use DATABASE_URL if available, otherwise fall back to individual env vars
-    const databaseUrl = process.env.DATABASE_URL;
-    
-    if (databaseUrl) {
-      pool = new Pool({
+export const connectDB = async (retries = 5, delay = 3000): Promise<void> => {
+  const databaseUrl = process.env.DATABASE_URL;
+
+  pool = databaseUrl
+    ? new Pool({
         connectionString: databaseUrl,
         max: 20,
         idleTimeoutMillis: 30000,
-        connectionTimeoutMillis: 2000,
-      });
-    } else {
-      pool = new Pool({
+        connectionTimeoutMillis: 5000,
+      })
+    : new Pool({
         host: process.env.DB_HOST || 'localhost',
         port: parseInt(process.env.DB_PORT || '5432'),
-        database: process.env.DB_NAME || 'boutique_auth',
+        database: process.env.DB_NAME || 'auth_db',
         user: process.env.DB_USER || 'postgres',
-        password: process.env.DB_PASSWORD || 'password',
+        password: process.env.DB_PASSWORD || 'postgres123',
         max: 20,
         idleTimeoutMillis: 30000,
-        connectionTimeoutMillis: 2000,
+        connectionTimeoutMillis: 5000,
       });
-    }
 
-    await pool.query('SELECT NOW()');
-    console.log('Connected to PostgreSQL database');
-  } catch (error) {
-    console.error('Database connection failed:', error);
-    throw error;
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      await pool.query('SELECT NOW()');
+      console.log('Connected to PostgreSQL database');
+      return;
+    } catch (error) {
+      console.error(`DB connection attempt ${attempt}/${retries} failed:`, (error as Error).message);
+      if (attempt === retries) throw error;
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
   }
 };
 

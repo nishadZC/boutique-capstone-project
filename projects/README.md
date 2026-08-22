@@ -72,7 +72,7 @@ This guide walks through the full deployment of the boutique e-commerce applicat
 
 ## Local Development with Docker
 
-Before deploying to the cloud, you can run the entire application locally using Docker Compose. This is the fastest way to test changes.
+Before deploying to the cloud, we can run the entire application locally using Docker Compose. This is the fastest way to test changes.
 
 ### Prerequisites
 
@@ -83,17 +83,11 @@ Before deploying to the cloud, you can run the entire application locally using 
 
 From the `projects/boutique-microservices/` directory:
 
-1. Build the React frontend. The Docker container mounts the local `build` directory, so it must be compiled first:
-```bash
-cd projects/boutique-microservices
-npm run build:frontend
-```
-
-2. Start the Docker containers:
+1. Start the Docker containers:
 ```bash
 docker-compose -f docker-compose.yml up --build -d
 ```
-This builds all backend service images and starts containers for every service plus PostgreSQL, Prometheus, and Grafana.
+This builds the frontend and all backend service images, and starts containers for every service plus PostgreSQL, Prometheus, and Grafana.
 
 ### Verify everything is running
 
@@ -161,7 +155,7 @@ The Terraform configuration in `projects/Infrastructure/` provisions everything 
 | Node Group | `m7i-flex.large`, 1–2 nodes, on-demand |
 | ECR Repositories | One per service (7 total) |
 | ArgoCD | Installed via Helm into `argocd` namespace |
-| Prometheus + Grafana | Installed via `kube-prometheus-stack` Helm chart into `monitoring` namespace |
+| Prometheus + Grafana | Installed via `kube-prometheus-stack` Helm chart into `monitoring` namespace | Alert Monitoring using MS Teams
 
 ### Prerequisites
 

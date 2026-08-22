@@ -363,16 +363,16 @@ const Register: React.FC = () => {
               </Step>
             ))}
           </Stepper>
-          
+
           {error && (
             <Alert severity="error" sx={{ mb: 3 }}>
               {error}
             </Alert>
           )}
-          
+
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
             {renderStepContent(activeStep)}
-            
+
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4 }}>
               <Button
                 disabled={activeStep === 0}
@@ -381,7 +381,7 @@ const Register: React.FC = () => {
               >
                 Back
               </Button>
-              
+
               {activeStep === steps.length - 1 ? (
                 <Button
                   type="submit"
@@ -389,12 +389,24 @@ const Register: React.FC = () => {
                   color="secondary"
                   disabled={loading || !formData.agreeToTerms}
                   sx={{
-                    background: '#d4af37',
+                    background: 'linear-gradient(135deg, #d4af37 0%, #b8941f 100%)',
                     color: '#1a1a1a',
+                    fontWeight: 700,
+                    letterSpacing: '0.05em',
                     px: 4,
                     py: 1.5,
                     '&:hover': {
-                      background: '#b8941f',
+                      background: 'linear-gradient(135deg, #e8c84a 0%, #c9a52a 100%)',
+                      color: '#1a1a1a',
+                      boxShadow: '0 4px 20px rgba(212, 175, 55, 0.4)',
+                    },
+                    '&:active': {
+                      background: '#a07d15',
+                      color: '#1a1a1a',
+                    },
+                    '&.Mui-disabled': {
+                      background: 'rgba(212, 175, 55, 0.3)',
+                      color: 'rgba(26, 26, 26, 0.4)',
                     },
                   }}
                 >
@@ -414,7 +426,7 @@ const Register: React.FC = () => {
               )}
             </Box>
           </Box>
-          
+
           <Box sx={{ textAlign: 'center', mt: 4 }}>
             <Typography variant="body2" color="text.secondary">
               Already have an account?{' '}

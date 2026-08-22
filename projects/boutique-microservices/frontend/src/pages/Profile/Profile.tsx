@@ -110,7 +110,7 @@ const Profile: React.FC = () => {
         <Typography variant="h3" component="h1" gutterBottom>
           My Profile
         </Typography>
-        
+
         <Grid container spacing={4}>
           {/* Profile Header */}
           <Grid size={{ xs: 12, md: 4 }}>
@@ -161,7 +161,7 @@ const Profile: React.FC = () => {
               </Button>
             </Paper>
           </Grid>
-          
+
           {/* Main Content */}
           <Grid size={{ xs: 12, md: 8 }}>
             <Grid container spacing={3}>
@@ -184,7 +184,7 @@ const Profile: React.FC = () => {
                   ))}
                 </Grid>
               </Grid>
-              
+
               {/* Personal Information */}
               <Grid size={{ xs: 12, md: 6 }}>
                 <Paper elevation={2} sx={{ p: 3, height: '100%' }}>
@@ -231,7 +231,7 @@ const Profile: React.FC = () => {
                   </List>
                 </Paper>
               </Grid>
-              
+
               {/* Quick Actions */}
               <Grid size={{ xs: 12, md: 6 }}>
                 <Paper elevation={2} sx={{ p: 3, height: '100%' }}>
@@ -253,7 +253,7 @@ const Profile: React.FC = () => {
                   </List>
                 </Paper>
               </Grid>
-              
+
               {/* Recent Activity */}
               <Grid size={{ xs: 12 }}>
                 <Paper elevation={2} sx={{ p: 3 }}>
@@ -313,8 +313,8 @@ const Profile: React.FC = () => {
         </DialogContent>
         <DialogActions sx={{ p: 2, pt: 0 }}>
           <Button onClick={() => setEditOpen(false)}>Cancel</Button>
-          <Button 
-            variant="contained" 
+          <Button
+            variant="contained"
             onClick={handleSaveProfile}
             disabled={updating}
           >

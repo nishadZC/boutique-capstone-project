@@ -10,7 +10,8 @@ let currentUser: any = null;
 
 router.post('/login', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email: rawEmail, password } = req.body;
+    const email = rawEmail?.toLowerCase();
 
     // For demo: allow any login with password "demo"
     if (password === 'demo') {

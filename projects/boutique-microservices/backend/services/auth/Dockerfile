@@ -31,3 +31,9 @@ COPY --from=builder /app/dist ./dist
 # Create non-root group & user
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nodejs -u 1001
+
+USER nodejs
+
+EXPOSE 3002
+
+CMD ["node", "dist/index.js"]

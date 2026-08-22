@@ -1,0 +1,864 @@
+{
+  "uid": "boutique-overview",
+  "title": "Boutique Microservices Overview",
+  "description": "Real-time monitoring dashboard for all Boutique microservices",
+  "tags": [
+    "boutique",
+    "microservices",
+    "overview"
+  ],
+  "timezone": "browser",
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "10s",
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "panels": [
+    {
+      "type": "row",
+      "title": "Service Health",
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 1
+      },
+      "id": 1,
+      "collapsed": false
+    },
+    {
+      "id": 2,
+      "title": "Gateway",
+      "type": "stat",
+      "gridPos": {
+        "x": 0,
+        "y": 1,
+        "w": 4,
+        "h": 3
+      },
+      "targets": [
+        {
+          "expr": "up{job=\"gateway\"}",
+          "legendFormat": "Gateway"
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "DOWN",
+                  "color": "red"
+                },
+                "1": {
+                  "text": "UP",
+                  "color": "green"
+                }
+              }
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 3,
+      "title": "Auth Service",
+      "type": "stat",
+      "gridPos": {
+        "x": 4,
+        "y": 1,
+        "w": 4,
+        "h": 3
+      },
+      "targets": [
+        {
+          "expr": "up{job=\"auth\"}",
+          "legendFormat": "Auth"
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "DOWN",
+                  "color": "red"
+                },
+                "1": {
+                  "text": "UP",
+                  "color": "green"
+                }
+              }
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 4,
+      "title": "Product Service",
+      "type": "stat",
+      "gridPos": {
+        "x": 8,
+        "y": 1,
+        "w": 4,
+        "h": 3
+      },
+      "targets": [
+        {
+          "expr": "up{job=\"product-service\"}",
+          "legendFormat": "Products"
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "DOWN",
+                  "color": "red"
+                },
+                "1": {
+                  "text": "UP",
+                  "color": "green"
+                }
+              }
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 5,
+      "title": "Order Service",
+      "type": "stat",
+      "gridPos": {
+        "x": 12,
+        "y": 1,
+        "w": 4,
+        "h": 3
+      },
+      "targets": [
+        {
+          "expr": "up{job=\"order-service\"}",
+          "legendFormat": "Orders"
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "DOWN",
+                  "color": "red"
+                },
+                "1": {
+                  "text": "UP",
+                  "color": "green"
+                }
+              }
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 6,
+      "title": "User Service",
+      "type": "stat",
+      "gridPos": {
+        "x": 16,
+        "y": 1,
+        "w": 4,
+        "h": 3
+      },
+      "targets": [
+        {
+          "expr": "up{job=\"user-service\"}",
+          "legendFormat": "Users"
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "DOWN",
+                  "color": "red"
+                },
+                "1": {
+                  "text": "UP",
+                  "color": "green"
+                }
+              }
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 7,
+      "title": "Orders Mgmt",
+      "type": "stat",
+      "gridPos": {
+        "x": 20,
+        "y": 1,
+        "w": 4,
+        "h": 3
+      },
+      "targets": [
+        {
+          "expr": "up{job=\"orders\"}",
+          "legendFormat": "Order Mgmt"
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "DOWN",
+                  "color": "red"
+                },
+                "1": {
+                  "text": "UP",
+                  "color": "green"
+                }
+              }
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "row",
+      "title": "Request Rate (req/s)",
+      "gridPos": {
+        "x": 0,
+        "y": 4,
+        "w": 24,
+        "h": 1
+      },
+      "id": 10,
+      "collapsed": false
+    },
+    {
+      "id": 11,
+      "title": "HTTP Request Rate — All Services",
+      "type": "timeseries",
+      "gridPos": {
+        "x": 0,
+        "y": 5,
+        "w": 24,
+        "h": 8
+      },
+      "targets": [
+        {
+          "expr": "rate(http_requests_total{job=\"gateway\"}[1m])",
+          "legendFormat": "Gateway"
+        },
+        {
+          "expr": "rate(http_requests_total{job=\"auth\"}[1m])",
+          "legendFormat": "Auth"
+        },
+        {
+          "expr": "rate(http_requests_total{job=\"product-service\"}[1m])",
+          "legendFormat": "Products"
+        },
+        {
+          "expr": "rate(http_requests_total{job=\"order-service\"}[1m])",
+          "legendFormat": "Orders"
+        },
+        {
+          "expr": "rate(http_requests_total{job=\"user-service\"}[1m])",
+          "legendFormat": "Users"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "gradientMode": "opacity"
+          }
+        }
+      },
+      "options": {
+        "tooltip": {
+          "mode": "multi"
+        },
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom"
+        }
+      }
+    },
+    {
+      "type": "row",
+      "title": "Response Time (Latency)",
+      "gridPos": {
+        "x": 0,
+        "y": 13,
+        "w": 24,
+        "h": 1
+      },
+      "id": 20,
+      "collapsed": false
+    },
+    {
+      "id": 21,
+      "title": "P50 Latency — All Services",
+      "type": "timeseries",
+      "gridPos": {
+        "x": 0,
+        "y": 14,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, rate(http_request_duration_ms_bucket{job=\"gateway\"}[5m]))",
+          "legendFormat": "Gateway p50"
+        },
+        {
+          "expr": "histogram_quantile(0.50, rate(http_request_duration_ms_bucket{job=\"auth\"}[5m]))",
+          "legendFormat": "Auth p50"
+        },
+        {
+          "expr": "histogram_quantile(0.50, rate(http_request_duration_ms_bucket{job=\"product-service\"}[5m]))",
+          "legendFormat": "Products p50"
+        },
+        {
+          "expr": "histogram_quantile(0.50, rate(http_request_duration_ms_bucket{job=\"order-service\"}[5m]))",
+          "legendFormat": "Orders p50"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms",
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 8
+          }
+        }
+      }
+    },
+    {
+      "id": 22,
+      "title": "P95 & P99 Latency — Gateway",
+      "type": "timeseries",
+      "gridPos": {
+        "x": 12,
+        "y": 14,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, rate(http_request_duration_ms_bucket{job=\"gateway\"}[5m]))",
+          "legendFormat": "Gateway p95"
+        },
+        {
+          "expr": "histogram_quantile(0.99, rate(http_request_duration_ms_bucket{job=\"gateway\"}[5m]))",
+          "legendFormat": "Gateway p99"
+        },
+        {
+          "expr": "histogram_quantile(0.95, rate(http_request_duration_ms_bucket{job=\"auth\"}[5m]))",
+          "legendFormat": "Auth p95"
+        },
+        {
+          "expr": "histogram_quantile(0.95, rate(http_request_duration_ms_bucket{job=\"product-service\"}[5m]))",
+          "legendFormat": "Products p95"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms",
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 8
+          }
+        }
+      }
+    },
+    {
+      "type": "row",
+      "title": "Error Rate",
+      "gridPos": {
+        "x": 0,
+        "y": 22,
+        "w": 24,
+        "h": 1
+      },
+      "id": 30,
+      "collapsed": false
+    },
+    {
+      "id": 31,
+      "title": "HTTP Error Rate (4xx + 5xx)",
+      "type": "timeseries",
+      "gridPos": {
+        "x": 0,
+        "y": 23,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "expr": "rate(http_requests_total{job=\"gateway\",status_code=~\"4..|5..\"}[1m])",
+          "legendFormat": "Gateway errors"
+        },
+        {
+          "expr": "rate(http_requests_total{job=\"auth\",status_code=~\"4..|5..\"}[1m])",
+          "legendFormat": "Auth errors"
+        },
+        {
+          "expr": "rate(http_requests_total{job=\"product-service\",status_code=~\"4..|5..\"}[1m])",
+          "legendFormat": "Product errors"
+        },
+        {
+          "expr": "rate(http_requests_total{job=\"order-service\",status_code=~\"4..|5..\"}[1m])",
+          "legendFormat": "Order errors"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 15
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 32,
+      "title": "Error % by Service",
+      "type": "gauge",
+      "gridPos": {
+        "x": 12,
+        "y": 23,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "expr": "100 * rate(http_requests_total{job=\"gateway\",status_code=~\"5..\"}[5m]) / rate(http_requests_total{job=\"gateway\"}[5m])",
+          "legendFormat": "Gateway 5xx %"
+        },
+        {
+          "expr": "100 * rate(http_requests_total{job=\"auth\",status_code=~\"5..\"}[5m]) / rate(http_requests_total{job=\"auth\"}[5m])",
+          "legendFormat": "Auth 5xx %"
+        },
+        {
+          "expr": "100 * rate(http_requests_total{job=\"product-service\",status_code=~\"5..\"}[5m]) / rate(http_requests_total{job=\"product-service\"}[5m])",
+          "legendFormat": "Products 5xx %"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 1
+              },
+              {
+                "color": "red",
+                "value": 5
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "row",
+      "title": "System Resources",
+      "gridPos": {
+        "x": 0,
+        "y": 31,
+        "w": 24,
+        "h": 1
+      },
+      "id": 40,
+      "collapsed": false
+    },
+    {
+      "id": 41,
+      "title": "Node.js Heap Memory — All Services",
+      "type": "timeseries",
+      "gridPos": {
+        "x": 0,
+        "y": 32,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "expr": "nodejs_heap_size_used_bytes{job=\"gateway\"}",
+          "legendFormat": "Gateway heap"
+        },
+        {
+          "expr": "nodejs_heap_size_used_bytes{job=\"auth\"}",
+          "legendFormat": "Auth heap"
+        },
+        {
+          "expr": "nodejs_heap_size_used_bytes{job=\"product-service\"}",
+          "legendFormat": "Products heap"
+        },
+        {
+          "expr": "nodejs_heap_size_used_bytes{job=\"order-service\"}",
+          "legendFormat": "Orders heap"
+        },
+        {
+          "expr": "nodejs_heap_size_used_bytes{job=\"user-service\"}",
+          "legendFormat": "Users heap"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 8
+          }
+        }
+      }
+    },
+    {
+      "id": 42,
+      "title": "Active Handles & Event Loop Lag",
+      "type": "timeseries",
+      "gridPos": {
+        "x": 12,
+        "y": 32,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "expr": "nodejs_active_handles_total{job=\"gateway\"}",
+          "legendFormat": "Gateway handles"
+        },
+        {
+          "expr": "nodejs_active_handles_total{job=\"auth\"}",
+          "legendFormat": "Auth handles"
+        },
+        {
+          "expr": "nodejs_eventloop_lag_seconds{job=\"gateway\"} * 1000",
+          "legendFormat": "Gateway loop lag (ms)"
+        },
+        {
+          "expr": "nodejs_eventloop_lag_seconds{job=\"auth\"} * 1000",
+          "legendFormat": "Auth loop lag (ms)"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "lineWidth": 2
+          }
+        }
+      }
+    },
+    {
+      "type": "row",
+      "title": "Active HTTP Connections",
+      "gridPos": {
+        "x": 0,
+        "y": 40,
+        "w": 24,
+        "h": 1
+      },
+      "id": 50,
+      "collapsed": false
+    },
+    {
+      "id": 51,
+      "title": "Active Connections per Service",
+      "type": "bargauge",
+      "gridPos": {
+        "x": 0,
+        "y": 41,
+        "w": 12,
+        "h": 6
+      },
+      "targets": [
+        {
+          "expr": "http_active_connections{job=\"gateway\"}",
+          "legendFormat": "Gateway"
+        },
+        {
+          "expr": "http_active_connections{job=\"auth\"}",
+          "legendFormat": "Auth"
+        },
+        {
+          "expr": "http_active_connections{job=\"product-service\"}",
+          "legendFormat": "Products"
+        },
+        {
+          "expr": "http_active_connections{job=\"order-service\"}",
+          "legendFormat": "Orders"
+        },
+        {
+          "expr": "http_active_connections{job=\"user-service\"}",
+          "legendFormat": "Users"
+        }
+      ],
+      "options": {
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 50
+              },
+              {
+                "color": "red",
+                "value": 100
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 52,
+      "title": "Total Requests Served",
+      "type": "stat",
+      "gridPos": {
+        "x": 12,
+        "y": 41,
+        "w": 12,
+        "h": 6
+      },
+      "targets": [
+        {
+          "expr": "sum(http_requests_total{job=\"gateway\"})",
+          "legendFormat": "Gateway total"
+        },
+        {
+          "expr": "sum(http_requests_total{job=\"auth\"})",
+          "legendFormat": "Auth total"
+        },
+        {
+          "expr": "sum(http_requests_total{job=\"product-service\"})",
+          "legendFormat": "Products total"
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "orientation": "horizontal",
+        "textMode": "auto",
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
